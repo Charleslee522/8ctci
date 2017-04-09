@@ -9,7 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "command-line-args": "^4.0.2",
     "express": "^4.15.2",
-    "install": "^0.8.8"
+    "install": "^0.8.8",
+    "node-schedule": "^1.2.1",
+    "request": "^2.81.0"
   }
 }
