@@ -1,0 +1,19 @@
+{
+  "name": "mster-of-time",
+  "version": "1.0.0",
+  "description": "server side alarm bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "command-line-args": "^4.0.2",
+    "express": "^4.15.2",
+    "install": "^0.8.8",
+    "node-schedule": "^1.2.1",
+    "request": "^2.81.0"
+  }
+}
