@@ -5,53 +5,117 @@ var Alarm = require('../model/Alarm');
 function AlarmManager(){
   var alarms=[];
 
-  this.create = function(req, res) {
+  this.run = function(argStr){
+    //call arg parser
     var creator_ = 'creator';
     var time_ = "20 * * * * *";
     var alarmName_ = "my_alarm";
     var desc_ = "Alarm!! 삐용~~ 삐용~~";
     var room_ = "cs room";
+
+    var action = argStr;
+
+    switch (action){
+      case 'create':create(creator_, time_, alarmName_, desc_, room_);break;
+      case 'remove':remove(alarmName_);break;
+      case 'on':on(alarmName_);break;
+      case 'off':off(alarmName_);break;
+      case 'list':showList();break;
+      default:break;
+    }
+
+  };
+
+  var create = function(creator_, time_, alarmName_, desc_, room_) {
+
     //create alarm
     var alarm = new Alarm(creator_, time_, alarmName_, desc_, room_);
     if(alarms[alarmName_]!==undefined){
-      res.send("aleady exist alarm name : "+alarm_name_);
+      console.log("aleady exist alarm name : "+alarmName_);
       return;
     }
-    //create job
-    alarm.job = schedule.scheduleJob(time_, function() {
+
+    alarms[alarmName_] = alarm;
+    on(alarmName_);
+    console.log(alarm.print());
+  };
+
+  var enable = function(alarmName, enable){
+    if(alarms[alarmName]===undefined){
+      return "not found alarm : "+alarmName;
+    }
+    if(enable_){
+      on(alarmName);
+    }else{
+      off(alarmName);
+    }
+  };
+
+  var on = function(alarmName_){
+    if(alarms[alarmName_]===undefined){
+      console.log("not found alarm : "+alarmName_);
+      return;
+    }
+    alarms[alarmName_].job = schedule.scheduleJob(alarms[alarmName_].time, function() {
         request.post({
                 url: 'http://localhost:3000/alarm',
                 body: {
-                    desc: desc_,
+                    desc: alarms[alarmName_].desc,
                     alarmName: alarmName_
                 },
                 json: true
             },
-            function(err, httpResponse, body) {}
+            function(err, httpResponse, body) {
+              if(err)console.log(err);
+            }
         );
     });
-    //insert alarms
-    alarms[alarmName_] = alarm;
-    res.send(alarm.print());
+  };
+
+  var off = function(alarmName_){
+    if(alarms[alarmName_]===undefined){
+      console.log("not found alarm : "+alarmName_);
+      return;
+    }
+    alarms[alarmName_].job.cancel();
   };
 
   this.getAlarmDesc = function(alarmName){
     if(alarms[alarmName]===undefined){
       return "not found alarm : "+alarmName;
     }
-    return alarms[alarmName].print();
+    return alarms[alarmName].desc;
   };
 
-  this.remove = function(req, res){
-    var alarmName = req.query.alarmName;
+  var remove = function(alarmName){
     if(alarms[alarmName]!==undefined){
-      alarms[alarmName].cancel();
+      alarms[alarmName].job.cancel();
       delete alarms[alarmName];
-      res.send("canceled "+alarmName);
+      console.log("canceled "+alarmName);
     }else{
-      res.send("not found "+alarmName);
+      console.log("not found "+alarmName);
     }
   };
+
+  var showList = function(){
+    var list_="";
+    for(var i in alarms) {
+      list_+=alarms[i].print()+'\r\n';
+    }
+    request.post({
+            url: 'http://localhost:3000/list',
+            body: {
+                list:list_
+            },
+            json: true
+        },
+        function(err, httpResponse, body) {
+          if(err)console.log(err);
+        }
+    );
+  };
 }
+
+
 
 module.exports = AlarmManager;
