@@ -8,7 +8,7 @@ var AlarmManager = require('./controller/AlarmManager');
 
 var alarmManager = new AlarmManager();
 
-app.get('/remove', function(req, res){
+app.get('/remove', function(req, res){  
   alarmManager.run('remove');
   res.send('remove');
 });
