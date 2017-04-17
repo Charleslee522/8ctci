@@ -8,6 +8,45 @@ var AlarmManager = require('./MasterOfTime/controller/AlarmManager');
 
 var alarmManager = new AlarmManager();
 
+const requestSender = require('request');
+const reply = require('./MasterOfTime/controller/reply.js');
+const LINE_CONSTS = require('./MasterOfTime/model/line.js');
+
+app.set('port', process.env.PORT || 8000);
+
+var https_server = app.listen(app.get('port'), function() {
+	console.log('Express https server listening on port ' + https_server.address().port);
+});
+
+app.get('/', (req, res) => {
+	console.log('[GET]/');
+	res.writeHead(200, {'Content-Type' : 'text/html'});
+	res.end('<h1><a href="http://8ctci.weebly.com">Hello, I\'m the Master of Time!</a><h1>');
+});
+
+app.get('/hook', (req, res) => {
+	console.log('[GET]hook!');
+	res.writeHead(200, {'Content-Type' : 'text/html'});
+	res.end('<h1><a href="http://8ctci.weebly.com">Hello, I\'m the Master of Time!</a><h1>');
+});
+
+app.post('/hook', (req, res) => {
+	var eventObj = req.body.events[0];
+	var source = eventObj.source;
+	var message = eventObj.message;
+
+	console.log('======================', new Date() ,'======================');
+	console.log('[request]', req.body);
+	console.log('[request source] ', eventObj.source);
+	console.log('[request message]', eventObj.message);
+	console.log('[request text]', eventObj.message.text);
+	if(message.type == "text") {
+		var replyMessage = [{"type": "text", "text" : eventObj.message.text}];
+		reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, replyMessage);
+	}
+	res.sendStatus(200);
+});
+
 app.get('/remove', function(req, res){  
   alarmManager.run('remove');
   res.send('remove');
@@ -46,6 +85,6 @@ app.post('/list', function(req, res){
   console.log(list);
 });
 
-app.listen(3000, function(){
-  console.log('Connected 3000 port!');
-});
+// app.listen(3000, function(){
+//   console.log('Connected 3000 port!');
+// });
