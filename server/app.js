@@ -3,8 +3,8 @@ var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-var Alarm = require('./model/Alarm');
-var AlarmManager = require('./controller/AlarmManager');
+var Alarm = require('./MasterOfTime/model/Alarm');
+var AlarmManager = require('./MasterOfTime/controller/AlarmManager');
 
 var alarmManager = new AlarmManager();
 
