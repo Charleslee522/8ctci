@@ -7,6 +7,7 @@ function Alarm(creator, time, alarm_name, desc, room) {
     this.alarm_name = alarm_name;
     this.desc = desc;
     this.room = room;
+    this.enable = true;
 }
 
 Alarm.prototype.print = function() {
@@ -15,11 +16,6 @@ Alarm.prototype.print = function() {
         ", alarm name : " + this.alarm_name +
         ", description : " + this.desc +
         ", room : "+ this.room;
-};
-
-Alarm.prototype.cancel = function() {
-    this.job.cancel();
-    console.log("cancel : " + this.alarm_name);
 };
 
 module.exports = Alarm;
