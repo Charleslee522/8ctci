@@ -1,6 +1,11 @@
 var chai = require('chai');
+<<<<<<< HEAD
 var AlarmManager = require('../MasterOfTime/controller/AlarmManager');
 var ResultMessage = require('../MasterOfTime/controller/ResultMessage');
+=======
+var AlarmManager = require('../../controller/AlarmManager');
+var ResultMessage = require('../../controller/ResultMessage');
+>>>>>>> origin/master
 
 var should = chai.should();
 

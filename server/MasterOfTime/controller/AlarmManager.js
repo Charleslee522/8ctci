@@ -57,7 +57,7 @@ function AlarmManager() {
 
     alarms[alarmName_] = alarm;
 
-    createJob(alarmName_);;
+    createJob(alarmName_);
     alarm.active = true;
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
