@@ -85,6 +85,11 @@ app.post('/list', function(req, res){
   console.log(list);
 });
 
+app.get('/clear', function(req, res){
+  alarmManager.run('clear');
+  res.send('clear');
+});
+
 // app.listen(3000, function(){
 //   console.log('Connected 3000 port!');
 // });

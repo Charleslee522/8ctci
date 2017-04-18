@@ -29,8 +29,6 @@ function AlarmManager() {
         off(alarmName_); break;
       case 'list':
         showList(); break;
-      case 'clear':
-        clearAlarms(); break;
       default:
         logger.info('\'' + action + '\' 등록되지 않은 명령어 입니다.');
         console.log('\'' + action + '\' 등록되지 않은 명령어 입니다.'); break;
@@ -59,7 +57,7 @@ function AlarmManager() {
 
     alarms[alarmName_] = alarm;
 
-    createJob(alarmName_);
+    createJob(alarmName_);;
     alarm.active = true;
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
@@ -137,14 +135,17 @@ function AlarmManager() {
     resultMessage.reslut = true;
 
     request.post({
-      url: 'http://localhost:3000/list',
+      url: 'http://localhost:8000/list',
       body: {
         list: list_
       },
       json: true
     },
       function (err, httpResponse, body) {
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          logger.error(err);
+        }
       }
     );
   };
@@ -210,22 +211,18 @@ function AlarmManager() {
     alarms[alarmName].job.cancel();
   }
 
-  /**
-   * 모든 알람을 제거 합니다.
-   */
-  var clearAlarms = function () {
-    console.log("clear start : " + alarms.length);
-    for (var i in this.alarms) {
+/**
+* 모든 알람을 제거 합니다.
+*/
+  this.clearAlarms = function () {
+    for (var i in alarms) {
+      console.log(alarms[i].alarmName);
       remove(alarms[i].alarmName);
     }
-    if (alarms.length === 0) {
-      resultMessage.message = "모든 알람 제거 완료.";
-      resultMessage.result = true;
-      console.log("clear end : " + alarms.length);
-    } else {
-      resultMessage.message = "모든 알람 제거 실패.";
-      resultMessage.result = false;
-    }
+
+    resultMessage.message = "모든 알람 제거 완료.";
+    resultMessage.result = true;
+
     return resultMessage;
   };
 }
