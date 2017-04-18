@@ -1,6 +1,8 @@
 var chai = require('chai');
-var AlarmManager = require('../../controller/AlarmManager');
-var ResultMessage = require('../../controller/ResultMessage');
+//var describe = require('describe');
+var AlarmManager = require('../MasterOfTime/controller/AlarmManager');
+var ResultMessage = require('../MasterOfTime/controller/ResultMessage');
+var factory = require('../MasterOfTime/controller/ArgsParser')
 
 var should = chai.should();
 
@@ -46,5 +48,14 @@ describe('AlarmManager', function(){
     //     resultMessage.result.should.equal(false);
     //     resultMessage.message.should.equal('\"my_alarm\" 으로 등록된 알람이 없습니다.');
     // });
+
+});
+
+describe('ArgParser', function(){
+    it('Alarm Object Create', function(){
+        var argParser = factory.createArgParser('@alarm charles');
+        argParser.cmd.should.equal('@alarm charles');
+
+    });
 
 });
