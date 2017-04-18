@@ -1,6 +1,6 @@
 var chai = require('chai');
-var AlarmManager = require('../controller/AlarmManager');
-var ResultMessage = require('../controller/ResultMessage');
+var AlarmManager = require('../../controller/AlarmManager');
+var ResultMessage = require('../../controller/ResultMessage');
 
 var should = chai.should();
 
