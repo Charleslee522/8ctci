@@ -7,7 +7,7 @@ function Alarm(creator, time, alarm_name, desc, room) {
     this.alarm_name = alarm_name;
     this.desc = desc;
     this.room = room;
-    this.enable = true;
+    this.active = true;
 }
 
 Alarm.prototype.print = function() {
