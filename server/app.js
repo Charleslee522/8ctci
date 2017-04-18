@@ -5,6 +5,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var Alarm = require('./MasterOfTime/model/Alarm');
 var AlarmManager = require('./MasterOfTime/controller/AlarmManager');
+require('./MasterOfTime/model/ArgParser');
 
 var alarmManager = new AlarmManager();
 
@@ -12,7 +13,7 @@ const requestSender = require('request');
 const reply = require('./MasterOfTime/controller/reply.js');
 const LINE_CONSTS = require('./MasterOfTime/model/line.js');
 
-app.set('port', process.env.PORT || 8000);
+app.set('port', process.env.PORT || 3000);
 
 var https_server = app.listen(app.get('port'), function() {
 	console.log('Express https server listening on port ' + https_server.address().port);
@@ -37,12 +38,14 @@ app.post('/hook', (req, res) => {
 
 	console.log('======================', new Date() ,'======================');
 	console.log('[request]', req.body);
-	console.log('[request source] ', eventObj.source);
-	console.log('[request message]', eventObj.message);
-	console.log('[request text]', eventObj.message.text);
-	if(message.type == "text") {
-		var replyMessage = [{"type": "text", "text" : eventObj.message.text}];
-		reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, replyMessage);
+	console.log('[request source] ', source);
+	console.log('[request message]', message);
+	console.log('[request text]', message.text);
+	if(message.type == "text" && message.text.startswith("@alarm")) {
+		//var replyMessage = [{"type": "text", "text" : message.text}];
+		//reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, replyMessage);
+		var arg = createArgParser(message.text);
+		
 	}
 	res.sendStatus(200);
 });
