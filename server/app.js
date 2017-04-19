@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var fs = require('fs');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var Alarm = require('./MasterOfTime/model/Alarm');
@@ -45,6 +46,17 @@ app.post('/hook', (req, res) => {
 		reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, replyMessage);
 	}
 	res.sendStatus(200);
+});
+
+app.get('/log', function(req, res){
+	fs.readFile('server.log','utf8',function(err, data){
+		if(err){
+			console.log(err);
+			res.status(500).send('Internal Sever Error');
+		}
+		data = data.replace(/(?:\r\n|\r|\n)/g,'<br/>');
+		res.send(data);
+	});
 });
 
 app.get('/remove', function(req, res){  
