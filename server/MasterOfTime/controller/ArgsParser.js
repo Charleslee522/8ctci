@@ -92,7 +92,7 @@
              break;
            case 'rm':
              result.setQuery('remove');
-             result.setRemove(command[0]);
+             result.setName(command[0]);
              break;
            case 'ls':
              result.setQuery('list');
