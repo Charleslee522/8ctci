@@ -4,8 +4,8 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-var Alarm = require('./MasterOfTime/model/Alarm');
 var AlarmManager = require('./MasterOfTime/controller/AlarmManager');
+var Manager = require('./MasterOfTime/controller/Manager');
 
 var alarmManager = new AlarmManager();
 
@@ -13,7 +13,7 @@ const requestSender = require('request');
 const reply = require('./MasterOfTime/controller/reply.js');
 const LINE_CONSTS = require('./MasterOfTime/model/line.js');
 
-app.set('port', process.env.PORT || 8000);
+app.set('port', process.env.PORT || 3000);
 
 var https_server = app.listen(app.get('port'), function() {
 	console.log('Express https server listening on port ' + https_server.address().port);
@@ -38,12 +38,14 @@ app.post('/hook', (req, res) => {
 
 	console.log('======================', new Date() ,'======================');
 	console.log('[request]', req.body);
-	console.log('[request source] ', eventObj.source);
-	console.log('[request message]', eventObj.message);
-	console.log('[request text]', eventObj.message.text);
+	console.log('[request source] ', source);
+	console.log('[request message]', message);
+	console.log('[request text]', message.text);
 	if(message.type == "text") {
-		var replyMessage = [{"type": "text", "text" : eventObj.message.text}];
-		reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, replyMessage);
+		var manager = Manager.createManager(message.text);
+		manager.setId(eventObj.replyToken);
+		manager.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
+		manager.run();
 	}
 	res.sendStatus(200);
 });
@@ -64,38 +66,38 @@ app.get('/remove', function(req, res){
   res.send('remove');
 });
 
-app.get('/create', function(req, res){
-  alarmManager.run('create');
-  res.send('create');
-});
+// app.get('/create', function(req, res){
+//   alarmManager.run('create');
+//   res.send('create');
+// });
 
-app.get('/on', function(req, res){
-  alarmManager.run('on');
-  res.send('on');
-});
+// app.get('/on', function(req, res){
+//   alarmManager.run('on');
+//   res.send('on');
+// });
 
-app.get('/off', function(req, res){
-  alarmManager.run('off');
-  res.send('off');
-});
+// app.get('/off', function(req, res){
+//   alarmManager.run('off');
+//   res.send('off');
+// });
 
-app.get('/list', function(req, res){
-  alarmManager.run('list');
-  res.send('list');
-});
+// app.get('/list', function(req, res){
+//   alarmManager.run('list');
+//   res.send('list');
+// });
 
-app.post('/alarm', function(req, res){
-  var desc = req.body.desc;
-  var alarmName = req.body.alarmName;
-  res.send("<h1>"+desc+"</h1>");
-  console.log(alarmManager.getAlarmDesc(alarmName));
-});
+// app.post('/alarm', function(req, res){
+//   var desc = req.body.desc;
+//   var alarmName = req.body.alarmName;
+//   res.send("<h1>"+desc+"</h1>");
+//   console.log(alarmManager.getAlarmDesc(alarmName));
+// });
 
-app.post('/list', function(req, res){
-  var list = req.body.list;
-  res.send("<h1>"+list+"</h1>");
-  console.log(list);
-});
+// app.post('/list', function(req, res){
+//   var list = req.body.list;
+//   res.send("<h1>"+list+"</h1>");
+//   console.log(list);
+// });
 
 app.get('/clear', function(req, res){
   alarmManager.run('clear');
