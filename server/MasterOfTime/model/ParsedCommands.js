@@ -1,7 +1,6 @@
  // Author: racerKim
- const util = require('util');
 
- var ParsedCommands = function() {
+var ParsedCommands = function() {
   if (!(this instanceof ParsedCommands)) {
     return new ParsedCommands();
   }
@@ -23,8 +22,8 @@
     return _query;
   }
 
-  ParsedCommands.prototype.setTime = function(sec, min, hour, day_month, month, day_week) {
-    _time = util.format('%s %s %s %s %s %s', sec, min, hour, day_month, month, day_week);
+  ParsedCommands.prototype.setTime = function(time) {
+    _time = time;
   }
 
   ParsedCommands.prototype.getTime = function() {
