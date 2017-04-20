@@ -49,10 +49,21 @@ app.post('/hook', (req, res) => {
 	res.sendStatus(200);
 });
 
-// app.get('/remove', function(req, res){  
-//   alarmManager.run('remove');
-//   res.send('remove');
-// });
+app.get('/log', function(req, res){
+	fs.readFile('server.log','utf8',function(err, data){
+		if(err){
+			console.log(err);
+			res.status(500).send('Internal Sever Error');
+		}
+		data = data.replace(/(?:\r\n|\r|\n)/g,'<br/>');
+		res.send(data);
+	});
+});
+
+app.get('/remove', function(req, res){  
+  alarmManager.run('remove');
+  res.send('remove');
+});
 
 // app.get('/create', function(req, res){
 //   alarmManager.run('create');
