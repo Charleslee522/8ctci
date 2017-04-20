@@ -1,6 +1,7 @@
 var schedule = require('node-schedule');
 var request = require('request');
 var Alarm = require('../model/Alarm');
+var Manager = require('../controller/Manager');
 var ResultMessage = require('./ResultMessage');
 var logger = require('logger').createLogger('server.log');
 
@@ -8,25 +9,25 @@ function AlarmManager() {
   var alarms = [];
   var resultMessage = new ResultMessage();
 
-  this.run = function (argStr) {
+  this.run = function (args) {
     //call arg parser
-    var creator_ = 'creator';
-    var time_ = "20 * * * * *";
-    var alarmName_ = "my_alarm";
-    var desc_ = "Alarm!! 삐용~~ 삐용~~";
-    var room_ = "cs room";
-
-    var action = argStr;
+    var creator = 'malshan';
+    var time = args.getTime();
+    var alarmName = args.getName();
+    var desc = "Alarm!! 삐용~~ 삐용~~";
+    var room = "cs room";
+    var action = args.getQuery();
+    
     logger.info(action);
     switch (action) {
       case 'create':
-        create(creator_, time_, alarmName_, desc_, room_); break;
+        create(creator, time, alarmName, desc, room); break;
       case 'remove':
-        remove(alarmName_); break;
+        remove(alarmName); break;
       case 'on':
-        on(alarmName_); break;
+        on(alarmName); break;
       case 'off':
-        off(alarmName_); break;
+        off(alarmName); break;
       case 'list':
         showList(); break;
       default:
@@ -34,30 +35,30 @@ function AlarmManager() {
         console.log('\'' + action + '\' 등록되지 않은 명령어 입니다.'); break;
     }
     logger.info(resultMessage.message);
-    console.log(resultMessage.message);
+    //console.log(resultMessage.message);
     return resultMessage;
   };
   /**
    * 알람을 생성합니다.
-   * @param {알람을 생성한 사람} creator_ 
-   * @param {알람 시간} time_ 
-   * @param {알람 이름} alarmName_ 
-   * @param {알람 설명} desc_ 
-   * @param {알람을 생성한 방 이름} room_ 
+   * @param {알람을 생성한 사람} creator 
+   * @param {알람 시간} time 
+   * @param {알람 이름} alarmName 
+   * @param {알람 설명} desc 
+   * @param {알람을 생성한 방 이름} room 
    */
-  var create = function (creator_, time_, alarmName_, desc_, room_) {
+  var create = function (creator, time, alarmName, desc, room) {
 
     //create alarm
-    var alarm = new Alarm(creator_, time_, alarmName_, desc_, room_);
-    if (hasAlarm(alarmName_)) {
+    var alarm = new Alarm(creator, time, alarmName, desc, room);
+    if (hasAlarm(alarmName)) {
       resultMessage.result = false;
-      resultMessage.message = '\"' + alarmName_ + '\" 으로 등록된 알람이 이미 있습니다. 다른 이름으로 등록해주세요.';
+      resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 이미 있습니다. 다른 이름으로 등록해주세요.';
       return;
     }
 
-    alarms[alarmName_] = alarm;
+    alarms[alarmName] = alarm;
 
-    createJob(alarmName_);
+    createJob(alarmName);
     alarm.active = true;
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
@@ -143,7 +144,6 @@ function AlarmManager() {
     },
       function (err, httpResponse, body) {
         if (err) {
-          console.log(err);
           logger.error(err);
         }
       }
@@ -178,19 +178,18 @@ function AlarmManager() {
    * 알람의 job을 생성합니다.
    * @param {알람 이름} alarmName 
    */
-  var createJob = function (alarmName_) {
-    alarms[alarmName_].job = schedule.scheduleJob(alarms[alarmName_].time, function () {
+  var createJob = function (alarmName) {
+    alarms[alarmName].job = schedule.scheduleJob(alarms[alarmName].time, function () {
       request.post({
         url: 'http://localhost:3000/alarm',
         body: {
-          desc: alarms[alarmName_].desc,
-          alarmName: alarmName_
+          desc: alarms[alarmName].desc,
+          alarmName: alarmName
         },
         json: true
       },
         function (err, httpResponse, body) {
           if (err) {
-            console.log(err);
             logger.error(err);
           }
         }
@@ -205,7 +204,6 @@ function AlarmManager() {
   var cancelJob = function (alarmName) {
     if (alarms[alarmName].job === undefined) {
       logger.info('job 을 찾을 수 없습니다. (\"' + alarmName + '\")');
-      consol.log('job 을 찾을 수 없습니다. (\"' + alarmName + '\")');
       return;
     }
     alarms[alarmName].job.cancel();
@@ -216,7 +214,6 @@ function AlarmManager() {
 */
   this.clearAlarms = function () {
     for (var i in alarms) {
-      console.log(alarms[i].alarmName);
       remove(alarms[i].alarmName);
     }
 
