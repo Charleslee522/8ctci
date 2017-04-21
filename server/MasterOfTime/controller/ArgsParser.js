@@ -125,7 +125,7 @@
            case 'rm':
            case 'remove':
              result.setQuery('remove');
-             result.setRemove(command[0].replace(wsReplacerRegex, ' '));
+             result.setName(command[0].replace(wsReplacerRegex, ' '));
              break;
            case 'ls':
              result.setQuery('list');
