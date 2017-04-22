@@ -2,18 +2,18 @@ var chai = require('chai');
 var AlarmManager = require('../MasterOfTime/controller/AlarmManager');
 var ResultMessage = require('../MasterOfTime/controller/ResultMessage');
 var Manager = require('../MasterOfTime/controller/Manager');
-var ArgsParser = require('../MasterOfTime/controller/ArgsParser');
+
 
 var should = chai.should();
 
 describe('AlarmManager', function () {
     var alarmManager = new AlarmManager();
     var resultMessage = new ResultMessage();
-    var argParser = new ArgsParser();
+    //var argParser = new AlarmArgParser();
     var args;
 
     it('create', function () {
-        args = argParser.parse('-c -t * * * 5 * * -n my_alarm');
+        args = new Manager.AlarmArgParser('-c -t "* * * 5 * *" -n my_alarm');
 
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
@@ -27,7 +27,7 @@ describe('AlarmManager', function () {
     });
 
     it('create use new name', function(){
-        args = argParser.parse('-c -t * * * 5 * * -n your_alarm');
+        args = new Manager.AlarmArgParser('-c -t "* * * 5 * *" -n your_alarm');
 
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
@@ -35,7 +35,7 @@ describe('AlarmManager', function () {
     });
 
     it('show alarm list', function(){
-        args = argParser.parse('-ls your_alarm');
+        args = new Manager.AlarmArgParser('-ls your_alarm');
 
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);        
@@ -45,14 +45,14 @@ describe('AlarmManager', function () {
     });
 
     it('remeve alarm', function(){
-        args = argParser.parse('-rm my_alarm');
+        args = new Manager.AlarmArgParser('-rm my_alarm');
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('\"my_alarm\" 알람을 제거하였습니다.');
     });
 
     it('remove again', function(){
-        args = argParser.parse('-rm my_alarm');
+        args = new Manager.AlarmArgParser('-rm my_alarm');
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(false);
         resultMessage.message.should.equal('\"my_alarm\" 으로 등록된 알람이 없습니다.');
@@ -60,7 +60,7 @@ describe('AlarmManager', function () {
 
     it('clear alarm manager', function () {
 
-        args = argParser.parse('-c -t * * * 5 * * -n my_alarm');
+        args = new Manager.AlarmArgParser('-c -t "* * * 5 * *" -n my_alarm');
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('알람 생성 완료!!');
@@ -69,7 +69,7 @@ describe('AlarmManager', function () {
         resultMessage.message.should.equal('모든 알람 제거 완료.');
         resultMessage.result.should.equal(true);
 
-        args = argParser.parse('-ls your_alarm');
+        args = new Manager.AlarmArgParser('-ls your_alarm');
         resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('');
@@ -79,14 +79,14 @@ describe('AlarmManager', function () {
 
 describe('Alarm', function(){
     it('Alarm Object Create', function(){
-        var alarm = Manager.createManager('@alarm -c -t * * * 5 * * -n jw');
+        var alarm = Manager.createManager('@alarm -c -t "* * * 5 * *" -n jw');
         alarm.query.should.equal('create');
     });
 });
 
 describe('Alarm', function() {
     it('Alarm set function', () => {
-        var alarm = Manager.createManager('@alarm -c -t * * * 5 * * -n jw');
+        var alarm = Manager.createManager('@alarm -c -t "* * * 5 * *" -n jw');
         alarm.setChannelAccessToken('token');
         alarm.setId('ID');
 
@@ -98,7 +98,7 @@ describe('Alarm', function() {
 
 describe('Alarm', function() {
     it('Alarm create', () => {
-        var alarm = Manager.createManager('@alarm -c -t * * * 5 * * -n jw');
+        var alarm = Manager.createManager('@alarm -c -t "* * * 5 * *" -n jw');
         alarm.setChannelAccessToken('token');
         alarm.setId('ID');
 

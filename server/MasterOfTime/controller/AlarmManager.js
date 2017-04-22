@@ -1,7 +1,7 @@
 var schedule = require('node-schedule');
 var request = require('request');
 var Alarm = require('../model/Alarm');
-var Manager = require('../controller/Manager');
+var Manager = require('../controller/Manager').AlarmArgParser;
 var ResultMessage = require('./ResultMessage');
 var logger = require('logger').createLogger('server.log');
 
@@ -12,11 +12,11 @@ function AlarmManager() {
   this.run = function (args) {
     //call arg parser
     var creator = 'malshan';
-    var time = args.getTime();
-    var alarmName = args.getName();
+    var time = args.time;
+    var alarmName = args.name;
     var desc = "Alarm!! 삐용~~ 삐용~~";
     var room = "cs room";
-    var action = args.getQuery();
+    var action = args.query;
     
     logger.info(action);
     switch (action) {
@@ -74,7 +74,7 @@ function AlarmManager() {
       return;
     }
     if (alarms[alarmName].active) {
-      resultMessage.message = "이미 켜져있는 알람입니다."
+      resultMessage.message = "이미 켜져있는 알람입니다.";
       resultMessage.result = false;
       return;
     }
@@ -103,7 +103,7 @@ function AlarmManager() {
     cancelJob(alarmName);
 
     alarms[alarmName].active = false;
-    resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 중지 되었습니다.'
+    resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 중지 되었습니다.';
     resultMessage.result = true;
 
   };
@@ -195,7 +195,7 @@ function AlarmManager() {
         }
       );
     });
-  }
+  };
 
   /**
    * 알람의 job을 중지(제거) 합니다.
@@ -207,7 +207,7 @@ function AlarmManager() {
       return;
     }
     alarms[alarmName].job.cancel();
-  }
+  };
 
 /**
 * 모든 알람을 제거 합니다.

@@ -34,5 +34,6 @@ function createManager(cmd) {
 //module.exports(ArgParser);
 module.exports = 
 {
-    createManager
+    createManager,
+	AlarmArgParser
 }
