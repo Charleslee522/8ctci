@@ -1,41 +1,41 @@
 var schedule = require('node-schedule');
 var request = require('request');
 var Alarm = require('../model/Alarm');
-var Manager = require('../controller/Manager').AlarmArgParser;
 var ResultMessage = require('./ResultMessage');
 var logger = require('logger').createLogger('server.log');
 
+var alarmManager = null;
+
 function AlarmManager() {
   var alarms = [];
-  var resultMessage = new ResultMessage();
 
-  this.run = function (args) {
+  this.run = function (alarmRunner) {
     //call arg parser
     var creator = 'malshan';
-    var time = args.time;
-    var alarmName = args.name;
+    var time = alarmRunner.getTime();
+    var alarmName = alarmRunner.getName();
     var desc = "Alarm!! 삐용~~ 삐용~~";
-    var room = "cs room";
-    var action = args.query;
+    var room = "<none>";
+    var action = alarmRunner.getQuery();
+    var id = alarmRunner.getId();
     
     logger.info(action);
     switch (action) {
       case 'create':
-        create(creator, time, alarmName, desc, room); break;
+        resultMessage = create(creator, time, alarmName, desc, room, id); break;
       case 'remove':
-        remove(alarmName); break;
+        resultMessage = remove(alarmName); break;
       case 'on':
-        on(alarmName); break;
+        resultMessage = on(alarmName); break;
       case 'off':
-        off(alarmName); break;
+        resultMessage = off(alarmName); break;
       case 'list':
-        showList(); break;
+        resultMessage = showList(); break;
       default:
         logger.info('\'' + action + '\' 등록되지 않은 명령어 입니다.');
         console.log('\'' + action + '\' 등록되지 않은 명령어 입니다.'); break;
     }
     logger.info(resultMessage.message);
-    //console.log(resultMessage.message);
     return resultMessage;
   };
   /**
@@ -46,22 +46,25 @@ function AlarmManager() {
    * @param {알람 설명} desc 
    * @param {알람을 생성한 방 이름} room 
    */
-  var create = function (creator, time, alarmName, desc, room) {
+  var create = function (creator, time, alarmName, desc, room, id) {
 
-    //create alarm
-    var alarm = new Alarm(creator, time, alarmName, desc, room);
+    var resultMessage = new ResultMessage();
     if (hasAlarm(alarmName)) {
       resultMessage.result = false;
       resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 이미 있습니다. 다른 이름으로 등록해주세요.';
-      return;
+      return resultMessage;
     }
+
+    //create alarm
+    var alarm = new Alarm(creator, time, alarmName, desc, room, id);
 
     alarms[alarmName] = alarm;
 
-    createJob(alarmName);
+    //createJob(alarmName);
     alarm.active = true;
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
+    return resultMessage;
   };
 
   /**
@@ -69,6 +72,7 @@ function AlarmManager() {
    * @param {알람 이름} alarmName
    */
   var on = function (alarmName) {
+    var resultMessage = new ResultMessage();
     if (!hasAlarm(alarmName)) {
       resultMessage.result = false;
       return;
@@ -83,6 +87,7 @@ function AlarmManager() {
 
     alarms[alarmName].active = true;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 시작 되었습니다.';
+    return resultMessage;
   };
 
   /**
@@ -90,6 +95,8 @@ function AlarmManager() {
    * @param {알람 이름} alarmName 
    */
   var off = function (alarmName) {
+    var resultMessage = new ResultMessage();
+
     if (!hasAlarm(alarmName)) {
       resultMessage.result = false;
       return;
@@ -105,7 +112,7 @@ function AlarmManager() {
     alarms[alarmName].active = false;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 중지 되었습니다.';
     resultMessage.result = true;
-
+    return resultMessage;
   };
 
   /**
@@ -113,30 +120,38 @@ function AlarmManager() {
    * @param {알람 이름} alarmName 
    */
   var remove = function (alarmName) {
+    var resultMessage = new ResultMessage();
+
     if (!hasAlarm(alarmName)) {
       resultMessage.result = false;
-      return;
+      resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
+      return resultMessage;
     }
 
     cancelJob(alarmName);
     delete alarms[alarmName];
     resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 알람을 제거하였습니다.';
+    
+    return resultMessage;
   };
 
   /**
    * 등록된 알람의 목록을 반환합니다.
    */
   var showList = function () {
+
+    var resultMessage = new ResultMessage();
+
     var list_ = "";
     for (var i in alarms) {
       list_ += alarms[i].print() + '\r\n';
     }
     resultMessage.message = list_;
-    resultMessage.reslut = true;
+    resultMessage.result = true;
 
     request.post({
-      url: 'http://localhost:8000/list',
+      url: 'http://localhost:3000/list',
       body: {
         list: list_
       },
@@ -148,6 +163,7 @@ function AlarmManager() {
         }
       }
     );
+    return resultMessage;
   };
 
   /**
@@ -156,7 +172,6 @@ function AlarmManager() {
    */
   var hasAlarm = function (alarmName) {
     if (alarms[alarmName] === undefined) {
-      resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
       return false;
     }
     return true;
@@ -184,7 +199,8 @@ function AlarmManager() {
         url: 'http://localhost:3000/alarm',
         body: {
           desc: alarms[alarmName].desc,
-          alarmName: alarmName
+          alarmName: alarmName,
+          id: alarms[alarmName].id
         },
         json: true
       },
@@ -224,6 +240,12 @@ function AlarmManager() {
   };
 }
 
+function getAlarmManager() {
+    if(!alarmManager) {
+      alarmManager = new AlarmManager();
+    }
+    return alarmManager;
+  }
 
 
-module.exports = AlarmManager;
+module.exports = getAlarmManager;

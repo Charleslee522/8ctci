@@ -5,13 +5,14 @@ var fs = require('fs');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var AlarmManager = require('./MasterOfTime/controller/AlarmManager');
-var Manager = require('./MasterOfTime/controller/Manager');
+const Runner = require('./MasterOfTime/controller/AlarmRunner');
 
 var alarmManager = new AlarmManager();
 
 const requestSender = require('request');
-const reply = require('./MasterOfTime/controller/reply.js');
-const LINE_CONSTS = require('./MasterOfTime/model/line.js');
+const push = require('./MasterOfTime/controller/push')
+const reply = require('./MasterOfTime/controller/reply');
+const LINE_CONSTS = require('./MasterOfTime/model/line');
 
 app.set('port', process.env.PORT || 3000);
 
@@ -35,17 +36,16 @@ app.post('/hook', (req, res) => {
 	var eventObj = req.body.events[0];
 	var source = eventObj.source;
 	var message = eventObj.message;
-
 	console.log('======================', new Date() ,'======================');
 	console.log('[request]', req.body);
 	console.log('[request source] ', source);
 	console.log('[request message]', message);
 	console.log('[request text]', message.text);
 	if(message.type == "text") {
-		var manager = Manager.createManager(message.text);
-		manager.setId(eventObj.replyToken);
-		manager.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
-		manager.run();
+		var runner = Runner.getRunner(message.text);
+		runner.setId(eventObj.replyToken);
+		runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
+		runner.run();
 	}
 	res.sendStatus(200);
 });
@@ -66,11 +66,6 @@ app.get('/remove', function(req, res){
   res.send('remove');
 });
 
-// app.get('/create', function(req, res){
-//   alarmManager.run('create');
-//   res.send('create');
-// });
-
 // app.get('/on', function(req, res){
 //   alarmManager.run('on');
 //   res.send('on');
@@ -86,12 +81,13 @@ app.get('/remove', function(req, res){
 //   res.send('list');
 // });
 
-// app.post('/alarm', function(req, res){
-//   var desc = req.body.desc;
-//   var alarmName = req.body.alarmName;
-//   res.send("<h1>"+desc+"</h1>");
-//   console.log(alarmManager.getAlarmDesc(alarmName));
-// });
+app.post('/alarm', function(req, res){
+  var desc = req.body.desc;
+  var id = req.body.id;
+  var message = [{"type": "text", "text" : req.body.alarmName}];
+  push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.id, replyMessage);
+  console.log(alarmManager.getAlarmDesc(alarmName));
+});
 
 // app.post('/list', function(req, res){
 //   var list = req.body.list;
@@ -107,3 +103,5 @@ app.get('/clear', function(req, res){
 // app.listen(3000, function(){
 //   console.log('Connected 3000 port!');
 // });
+
+module.exports = app;

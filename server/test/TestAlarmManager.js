@@ -1,92 +1,83 @@
 var chai = require('chai');
-var AlarmManager = require('../MasterOfTime/controller/AlarmManager');
+var getAlarmManager = require('../MasterOfTime/controller/AlarmManager');
 var ResultMessage = require('../MasterOfTime/controller/ResultMessage');
-var Manager = require('../MasterOfTime/controller/Manager');
-
+var Runner = require('../MasterOfTime/controller/AlarmRunner');
+var ArgsParser = require('../MasterOfTime/controller/ArgsParser');
 
 var should = chai.should();
 
 describe('AlarmManager', function () {
-    var alarmManager = new AlarmManager();
-    var resultMessage = new ResultMessage();
-    //var argParser = new AlarmArgParser();
-    var args;
+    it('create', function() {
+        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n my_alarm');
+        resultMessage = runner.run();
 
-    it('create', function () {
-        args = new Manager.AlarmArgParser('-c -t "* * * 5 * *" -n my_alarm');
-
-        resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('알람 생성 완료!!');
     });
 
     it('create use exist name', function(){
-        resultMessage = alarmManager.run(args);
+        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n my_alarm');
+        resultMessage = runner.run();
+
         resultMessage.result.should.equal(false);
         resultMessage.message.should.equal('\"my_alarm\" 으로 등록된 알람이 이미 있습니다. 다른 이름으로 등록해주세요.');
     });
 
     it('create use new name', function(){
-        args = new Manager.AlarmArgParser('-c -t "* * * 5 * *" -n your_alarm');
+        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n your_alarm');
+        resultMessage = runner.run();
 
-        resultMessage = alarmManager.run(args);
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('알람 생성 완료!!');
     });
 
     it('show alarm list', function(){
-        args = new Manager.AlarmArgParser('-ls your_alarm');
-
-        resultMessage = alarmManager.run(args);
+        var runner = Runner.getRunner('@alarm -ls your_alarm');
+        resultMessage = runner.run();
+        console.log(resultMessage.result);
+        console.log(resultMessage.message);
         resultMessage.result.should.equal(true);        
-        var list = 'creator : malshan, time : * * * 5 * *, alarm name : my_alarm, description : Alarm!! 삐용~~ 삐용~~, room : cs room\r\n';
-        list+='creator : malshan, time : * * * 5 * *, alarm name : your_alarm, description : Alarm!! 삐용~~ 삐용~~, room : cs room\r\n';
+        var list = 'creator : malshan, time : * * * 5 * *, alarm name : my_alarm, description : Alarm!! 삐용~~ 삐용~~, room : <none>\r\n';
+        list+='creator : malshan, time : * * * 5 * *, alarm name : your_alarm, description : Alarm!! 삐용~~ 삐용~~, room : <none>\r\n';
         resultMessage.message.should.equal(list);
     });
 
     it('remeve alarm', function(){
-        args = new Manager.AlarmArgParser('-rm my_alarm');
-        resultMessage = alarmManager.run(args);
+        var runner = Runner.getRunner('@alarm -rm my_alarm');
+        resultMessage = runner.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('\"my_alarm\" 알람을 제거하였습니다.');
     });
 
     it('remove again', function(){
-        args = new Manager.AlarmArgParser('-rm my_alarm');
-        resultMessage = alarmManager.run(args);
+        var runner = Runner.getRunner('@alarm -rm my_alarm');
+        resultMessage = runner.run();
         resultMessage.result.should.equal(false);
         resultMessage.message.should.equal('\"my_alarm\" 으로 등록된 알람이 없습니다.');
     });
 
     it('clear alarm manager', function () {
-
-        args = new Manager.AlarmArgParser('-c -t "* * * 5 * *" -n my_alarm');
-        resultMessage = alarmManager.run(args);
+        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n my_alarm');
+        resultMessage = runner.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('알람 생성 완료!!');
 
+        var alarmManager = getAlarmManager();
         resultMessage = alarmManager.clearAlarms();
         resultMessage.message.should.equal('모든 알람 제거 완료.');
         resultMessage.result.should.equal(true);
 
-        args = new Manager.AlarmArgParser('-ls your_alarm');
-        resultMessage = alarmManager.run(args);
+        var runner2 = Runner.getRunner('@alarm -ls your_alarm');
+        resultMessage = runner2.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('');
     });
 
 });
 
-describe('Alarm', function(){
-    it('Alarm Object Create', function(){
-        var alarm = Manager.createManager('@alarm -c -t "* * * 5 * *" -n jw');
-        alarm.query.should.equal('create');
-    });
-});
-
 describe('Alarm', function() {
     it('Alarm set function', () => {
-        var alarm = Manager.createManager('@alarm -c -t "* * * 5 * *" -n jw');
+        var alarm = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n jw');
         alarm.setChannelAccessToken('token');
         alarm.setId('ID');
 
@@ -98,14 +89,14 @@ describe('Alarm', function() {
 
 describe('Alarm', function() {
     it('Alarm create', () => {
-        var alarm = Manager.createManager('@alarm -c -t "* * * 5 * *" -n jw');
-        alarm.setChannelAccessToken('token');
-        alarm.setId('ID');
+        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n jw');
+        runner.setChannelAccessToken('token');
+        runner.setId('ID');
 
-        alarm.token.should.equal('token');
-        alarm.id.should.equal('ID');
-        alarm.name.should.equal('jw');
-        alarm.time.should.equal('* * * 5 * *');
+        runner.token.should.equal('token');
+        runner.id.should.equal('ID');
+        runner.getName().should.equal('jw');
+        runner.getTime().should.equal('* * * 5 * *');
     });
     
 });

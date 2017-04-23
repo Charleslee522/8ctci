@@ -1,5 +1,6 @@
  // Author: racerKim
-
+ const util = require('util');
+ var argsParser = null;
  var ArgsParser = function() {
    var ArgumentParser = require('argparse').ArgumentParser;
 
@@ -9,25 +10,25 @@
      description: 'Alarm bot Argrment Parser'
    });
    parser.addArgument(
-     ['-c', '-mk', ], {
+     ['-c', '-mk'], {
        help: 'create alarm',
        nargs: 0
      }
    );
    parser.addArgument(
-     ['-t', '-time', ], {
+     ['-t', '-time'], {
        help: 'alarm time',
        nargs: 1
      }
    );
    parser.addArgument(
-     ['-n', '-name', ], {
+     ['-n', '-name'], {
        help: 'alarm name',
        nargs: 1
      }
    );
    parser.addArgument(
-     ['-d', '-description', ], {
+     ['-d', '-description'], {
        help: 'alarm description',
        nargs: 1
      }
@@ -134,6 +135,8 @@
            default:
              break;
          }
+       } else {
+         // do logging
        }
      });
      return result;
@@ -141,4 +144,16 @@
 
  }
 
- module.exports = ArgsParser;
+ var getArgsParser = function() {
+   if(argsParser) {
+      argsParser = new ArgsParser();
+   }
+   return argsParser;
+ }
+
+ module.exports = function() {
+   if(!argsParser) {
+      argsParser = new ArgsParser();
+   }
+   return argsParser;
+ };
