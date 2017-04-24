@@ -60,7 +60,7 @@ function AlarmManager() {
 
     alarms[alarmName] = alarm;
 
-    //createJob(alarmName);
+    createJob(alarmName);
     alarm.active = true;
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
@@ -151,7 +151,7 @@ function AlarmManager() {
     resultMessage.result = true;
 
     request.post({
-      url: 'http://localhost:3000/list',
+      url: 'http://localhost:8000/list',
       body: {
         list: list_
       },

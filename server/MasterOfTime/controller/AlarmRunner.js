@@ -7,7 +7,6 @@ var runner = null;
 function AlarmRunner(cmd) {
 	this.argsParser = getArgsParser();
 	this.args = this.argsParser.parse(cmd);
-    //this.alarmManager = new AlarmManager();
 	this.alarmManager = getAlarmManager();
 }
 

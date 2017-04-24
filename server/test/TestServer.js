@@ -2,17 +2,6 @@ const request = require('supertest');
 const express = require('express');
 const app = require('../app');
 
-// describe('Server GET /hook', function() {
-//   it('Server get test', function(done) {
-//     request(app)
-//       .get('/hook')
-//       .set('Accept', 'application/json')
-//       .expect('Content-Type', /json/)
-//       .expect(200)
-//       .end(done);
-//   });
-// });
-
 describe('Server POST /hook', function() {
   it('Server post test', function(done) {
     request(app)
