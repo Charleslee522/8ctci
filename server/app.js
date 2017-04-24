@@ -44,11 +44,24 @@ app.post('/hook', (req, res) => {
 	if(message.type == "text") {
 		var runner = Runner.getRunner(message.text);
 		if(runner) {
-			runner.setId(eventObj.replyToken);
+			var id;
+			if(source.type == "user") {
+				id = source.userId;
+			}
+			else if(source.type == "group") {
+				id = source.groupId;
+			}
+			 else if(source.type == "room") {
+				id = source.roomId;
+			}
+			console.log('[Request Source] type: ', source.type);
+			console.log('[Request Source] id: ', id);
+			runner.setId(id);
 			runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
 			runner.run();
 		}
 		else {	// if runner is null or undefined
+			console.log(message.text);
 			var message = [{"type": "text", "text" : "요청 메시지가 잘못 되었습니다 :)"}];
 			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, message);
 		}
@@ -88,11 +101,15 @@ app.get('/remove', function(req, res){
 // });
 
 app.post('/alarm', function(req, res){
-  var desc = req.body.desc;
-  var id = req.body.id;
-  var message = [{"type": "text", "text" : req.body.alarmName}];
-  push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.id, message);
-  console.log(alarmManager.getAlarmDesc(alarmName));
+	var desc = req.body.desc;
+	var id = req.body.id;
+	var name = req.body.alarmName;
+	console.log('[Alarm Request] desc: ', desc);
+	console.log('[Alarm Request] id: ', id);
+	console.log('[Alarm Request] alarmName: ', name);
+	var displayText = name + ' 알람: ' + desc;
+	var message = [{"type": "text", "text" : displayText}];
+	push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, id, message);
 });
 
 // app.post('/list', function(req, res){
