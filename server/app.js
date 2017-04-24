@@ -43,9 +43,15 @@ app.post('/hook', (req, res) => {
 	console.log('[request text]', message.text);
 	if(message.type == "text") {
 		var runner = Runner.getRunner(message.text);
-		runner.setId(eventObj.replyToken);
-		runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
-		runner.run();
+		if(runner) {
+			runner.setId(eventObj.replyToken);
+			runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
+			runner.run();
+		}
+		else {	// if runner is null or undefined
+			var message = [{"type": "text", "text" : "요청 메시지가 잘못 되었습니다 :)"}];
+			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.id, message);
+		}
 	}
 	res.sendStatus(200);
 });
@@ -85,7 +91,7 @@ app.post('/alarm', function(req, res){
   var desc = req.body.desc;
   var id = req.body.id;
   var message = [{"type": "text", "text" : req.body.alarmName}];
-  push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.id, replyMessage);
+  push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.id, message);
   console.log(alarmManager.getAlarmDesc(alarmName));
 });
 

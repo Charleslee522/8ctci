@@ -53,7 +53,6 @@ function getRunner(cmd) {
 	}
 }
 
-//module.exports(ArgParser);
 module.exports = 
 {
     getRunner

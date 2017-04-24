@@ -75,19 +75,8 @@ describe('AlarmManager', function () {
 
 });
 
-describe('Alarm', function() {
-    it('Alarm set function', () => {
-        var alarm = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n jw');
-        alarm.setChannelAccessToken('token');
-        alarm.setId('ID');
+describe('Alarm Runner', function() {
 
-        alarm.token.should.equal('token');
-        alarm.id.should.equal('ID');
-        
-    });
-});
-
-describe('Alarm', function() {
     it('Alarm create', () => {
         var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n jw');
         runner.setChannelAccessToken('token');
@@ -99,4 +88,8 @@ describe('Alarm', function() {
         runner.getTime().should.equal('* * * 5 * *');
     });
     
+    it('Wrong cmd', () => {
+        var runner = Runner.getRunner('@alam -c -t "* * * 5 * *" -n jw');
+        should.equal(runner, null);
+    });
 });
