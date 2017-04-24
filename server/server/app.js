@@ -14,7 +14,7 @@ const push = require('./MasterOfTime/controller/push')
 const reply = require('./MasterOfTime/controller/reply');
 const LINE_CONSTS = require('./MasterOfTime/model/line');
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8000);
 
 var https_server = app.listen(app.get('port'), function() {
 	console.log('Express https server listening on port ' + https_server.address().port);
@@ -100,8 +100,8 @@ app.get('/clear', function(req, res){
   res.send('clear');
 });
 
-// app.listen(3000, function(){
-//   console.log('Connected 3000 port!');
+// app.listen(8000, function(){
+//   console.log('Connected 8000 port!');
 // });
 
 module.exports = app;
