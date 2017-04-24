@@ -50,7 +50,7 @@ app.post('/hook', (req, res) => {
 		}
 		else {	// if runner is null or undefined
 			var message = [{"type": "text", "text" : "요청 메시지가 잘못 되었습니다 :)"}];
-			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.id, message);
+			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, message);
 		}
 	}
 	res.sendStatus(200);
