@@ -196,7 +196,7 @@ function AlarmManager() {
   var createJob = function (alarmName) {
     alarms[alarmName].job = schedule.scheduleJob(alarms[alarmName].time, function () {
       request.post({
-        url: 'http://localhost:3000/alarm',
+        url: 'http://localhost:8000/alarm',
         body: {
           desc: alarms[alarmName].desc,
           alarmName: alarmName,
