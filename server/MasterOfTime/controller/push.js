@@ -7,10 +7,11 @@ module.exports.send = function(channelAccessToken, to_, messages_) {
 	};
 
 	var options = {
-		url: 'https://api.line.me/v2/bot/message/reply',
+		url: 'https://api.line.me/v2/bot/message/push',
 		method: 'POST',
 		headers: headers,
 		json: {
+			//to : to_,
 			to : to_,
 			messages : messages_
 		}
