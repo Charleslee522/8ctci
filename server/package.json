@@ -16,6 +16,7 @@
     "install": "^0.8.8",
     "logger": "0.0.1",
     "mocha": "^3.2.0",
+    "mongoose": "^4.9.6",
     "node-schedule": "^1.2.1",
     "request": "^2.81.0",
     "should": "^11.2.1",
