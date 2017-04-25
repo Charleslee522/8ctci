@@ -13,8 +13,8 @@ function AlarmManager() {
     //call arg parser
     var creator = 'malshan';
     var time = alarmRunner.getTime();
-    var alarmName = alarmRunner.getName();
-    var desc = "Alarm!! 삐용~~ 삐용~~";
+    var name = alarmRunner.getName();
+    var desc = alarmRunner.getDesc();
     var room = "<none>";
     var action = alarmRunner.getQuery();
     var id = alarmRunner.getId();
@@ -22,13 +22,13 @@ function AlarmManager() {
     logger.info(action);
     switch (action) {
       case 'create':
-        resultMessage = create(creator, time, alarmName, desc, room, id); break;
+        resultMessage = create(creator, time, name, desc, room, id); break;
       case 'remove':
-        resultMessage = remove(alarmName); break;
+        resultMessage = remove(name); break;
       case 'on':
-        resultMessage = on(alarmName); break;
+        resultMessage = on(name); break;
       case 'off':
-        resultMessage = off(alarmName); break;
+        resultMessage = off(name); break;
       case 'list':
         resultMessage = showList(); break;
       default:

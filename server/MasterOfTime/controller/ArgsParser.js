@@ -1,5 +1,4 @@
  // Author: racerKim
- const util = require('util');
  var argsParser = null;
  var ArgsParser = function() {
    var ArgumentParser = require('argparse').ArgumentParser;

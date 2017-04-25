@@ -26,6 +26,10 @@ AlarmRunner.prototype.getName = function() {
 	return this.args.getName();
 }
 
+AlarmRunner.prototype.getDesc = function() {
+	return this.args.getDesc();
+}
+
 AlarmRunner.prototype.setChannelAccessToken = function(_token) {
     this.token = _token;
 }

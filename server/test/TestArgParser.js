@@ -14,12 +14,13 @@ describe('ArgsParser', function () {
         result.getName().should.equal('jw');
     });
 
-    it('parsing command @alarm', function () {
+    it('parsing command create description', function () {
         var argsParser = new ArgsParser();
-        var result = argsParser.parse('-c -t "* * * 5 * *" -n jw');
+        var result = argsParser.parse('-c -t "* * * 5 * *" -n jw -d "description!"');
         result.getQuery().should.equal('create');
         result.getTime().should.equal('* * * 5 * *');
         result.getName().should.equal('jw');
+        result.getDesc().should.equal('description!');
     });
 
     it('parsing command @alarm rm', function () {
