@@ -43,13 +43,16 @@ function saveObject(obj) {
 }
 
 function findOneAndUpdate(preObj,updateObj){
-  new Book.findOneAndUpdate(preObj,updateObj,function(err,user){
+  Book.findOneAndUpdate(preObj,updateObj,function(err,user){
   if(err) throw err;
 
   //console.log(user);
-});}
+});
+
+} 
+
 function findOneAndRemove(obj){
-  new Book.findOneAndRemove(obj, function(err) {
+  Book.findOneAndRemove(obj, function(err) {
   if (err) throw err;
 
   // we have deleted the user
