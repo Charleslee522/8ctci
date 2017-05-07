@@ -1,5 +1,5 @@
 const json = {
-  alarmName: "test1",
+  alarmName: "json",
   creator: "kyeongin",
   time: "8 * * * *",
   active: true,
@@ -7,18 +7,19 @@ const json = {
   room : "124",
   desc : "test"
 }
+
 const serchjson = {
-  alarmName: "test1",
+  alarmName: "json",
   creator: "kyeongin",
   time: "8 * * * *",
   active: true,
   id: "kyeongin",
-  room : "123",
+  room : "124",
   desc : "test"
 }
 
 const updateJson = {
-  alarmName: "test1",
+  alarmName: "updateJson",
   creator: "kyeongin",
   time: "8 * * * *",
   active: false,
@@ -27,13 +28,24 @@ const updateJson = {
   desc : "test_update"
 }
 const tmp = require('./mongodb-helper');
-tmp.save(json);
-tmp.allFind(function(user){
+
+var tmpInstance = tmp(json);
+
+//tmpInstance.save();
+tmpInstance.allFind(function(user){
   console.log(user);
 });
-tmp.remove(serchjson);
-tmp.findOneAndUpdate(serchjson,updateJson);
 
-tmp.close();
-//console.log(user);
-//
+var tmpInstance2= tmp(json, updateJson);
+
+//tmpInstance.remove();
+//tmpInstance2.findOneAndUpdate();
+
+delete tmp(json);
+
+
+tmpInstance.save();
+
+//tmpInstance.close();
+// //console.log(user);
+

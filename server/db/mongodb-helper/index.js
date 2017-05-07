@@ -15,6 +15,18 @@ mongoose
   })
   .catch(console.error);
      
+
+function MONGODB(preObject, newObject) {
+
+  if (!(this instanceof MONGODB)) {
+    return new MONGODB(preObject, newObject);
+  }
+
+  this.preObject = preObject;
+  this.newObject = newObject;
+};
+
+
 function successCallback() {
   console.log('success!!');
 }
@@ -31,13 +43,13 @@ function saveObject(obj) {
 }
 
 function findOneAndUpdate(preObj,updateObj){
-  Book.findOneAndUpdate(preObj,updateObj,function(err,user){
+  new Book.findOneAndUpdate(preObj,updateObj,function(err,user){
   if(err) throw err;
 
   //console.log(user);
 });}
 function findOneAndRemove(obj){
-  Book.findOneAndRemove(obj, function(err) {
+  new Book.findOneAndRemove(obj, function(err) {
   if (err) throw err;
 
   // we have deleted the user
@@ -45,25 +57,27 @@ function findOneAndRemove(obj){
 });
 }
   
-module.exports.save = function(obj){
-  saveObject(obj)
+MONGODB.prototype.save = function(){
+  saveObject(this.preObject)
 }
 
-module.exports.allFind = function(user){
+MONGODB.prototype.allFind = function(user){
 
 Book.find({},function(err,users){
   if(err) throw err;
   user(users);
 });}
 
-module.exports.findOneAndUpdate = function(preObj,updateObj){
-  findOneAndUpdate(preObj,updateObj)
+MONGODB.prototype.findOneAndUpdate = function(){
+  findOneAndUpdate(this.preObject,this.newObject)
 }
-module.exports.remove = function(obj){
-  findOneAndRemove(obj)
+MONGODB.prototype.remove = function(){
+  findOneAndRemove(this.preObject)
 }
-module.exports.close = function()
+MONGODB.prototype.close = function()
 {
   mongoose.connection.close();
 }
 
+
+module.exports = MONGODB;
