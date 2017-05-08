@@ -35,7 +35,7 @@
    parser.addArgument(
      ['-ls', '-list'], {
        help: 'alram list',
-       nargs: 1
+       nargs: 0
      }
    );
    parser.addArgument(
@@ -129,7 +129,6 @@
              break;
            case 'ls':
              result.setQuery('list');
-             result.setList(command[0].replace(wsReplacerRegex, ' '));
              break;
            default:
              break;
