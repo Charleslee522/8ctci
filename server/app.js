@@ -58,7 +58,10 @@ app.post('/hook', (req, res) => {
 			console.log('[Request Source] id: ', id);
 			runner.setId(id);
 			runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
-			runner.run();
+			
+			resultMessage = runner.run();
+			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, resultMessage.message);
+
 		}
 		else {	// if runner is null or undefined
 			console.log(message.text);
@@ -110,17 +113,21 @@ app.post('/alarm', function(req, res){
 	var displayText = name + ' 알람: ' + desc;
 	var message = [{"type": "text", "text" : displayText}];
 	push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, id, message);
+	res.sendStatus(200);
 });
+
+
 
 // app.post('/list', function(req, res){
 //   var list = req.body.list;
 //   res.send("<h1>"+list+"</h1>");
 //   console.log(list);
+//	res.sendStatus(200);
 // });
 
 app.get('/clear', function(req, res){
-  alarmManager.run('clear');
-  res.send('clear');
+	alarmManager.run('clear');
+	res.send('clear');
 });
 
 // app.listen(8000, function(){
