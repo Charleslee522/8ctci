@@ -88,20 +88,15 @@ app.get('/remove', function(req, res){
   res.send('remove');
 });
 
-// app.get('/on', function(req, res){
-//   alarmManager.run('on');
-//   res.send('on');
-// });
+app.get('/on', function(req, res){
+  alarmManager.run('on');
+  res.send('on');
+});
 
-// app.get('/off', function(req, res){
-//   alarmManager.run('off');
-//   res.send('off');
-// });
-
-// app.get('/list', function(req, res){
-//   alarmManager.run('list');
-//   res.send('list');
-// });
+app.get('/off', function(req, res){
+  alarmManager.run('off');
+  res.send('off');
+});
 
 app.post('/alarm', function(req, res){
 	var desc = req.body.desc;
@@ -116,22 +111,15 @@ app.post('/alarm', function(req, res){
 	res.sendStatus(200);
 });
 
-
-
-// app.post('/list', function(req, res){
-//   var list = req.body.list;
-//   res.send("<h1>"+list+"</h1>");
-//   console.log(list);
-//	res.sendStatus(200);
-// });
+app.post('/list', function(req, res){
+	var list = req.body.list;
+	res.send(list);
+	console.log(list);
+});
 
 app.get('/clear', function(req, res){
 	alarmManager.run('clear');
 	res.send('clear');
 });
-
-// app.listen(8000, function(){
-//   console.log('Connected 8000 port!');
-// });
 
 module.exports = app;
