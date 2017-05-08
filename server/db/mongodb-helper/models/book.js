@@ -11,4 +11,6 @@ const alarmSchema = new Schema({
     room:String
 });
 
+alarmSchema.index({alarmName:1,creator:1,time:1,id:1,room:1},{unique:true});
+
 module.exports = mongoose.model('alarm', alarmSchema);
