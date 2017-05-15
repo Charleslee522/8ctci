@@ -12,11 +12,9 @@ function Alarm(creator, time, alarmName, desc, room, id) {
 }
 
 Alarm.prototype.print = function() {
-    return "creator : " + this.creator +
-        ", time : " + this.time +
-        ", alarm name : " + this.alarmName +
-        ", description : " + this.desc +
-        ", room : "+ this.room;
+    return  "alarm name : " + this.alarmName +
+            ", time : " + this.time +       
+            ", description : " + this.desc;
 };
 
 module.exports = Alarm;
