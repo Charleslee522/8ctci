@@ -23,3 +23,8 @@ module.exports.send = function(channelAccessToken, replyToken_, messages_) {
 		console.log('response', response.statusCode);
 	});
 };
+
+module.exports.sendMessage = function(channelAccessToken, replyToken_, string_) {
+	var message = [{"type": "text", "text" : string_}];
+	this.send(channelAccessToken, replyToken_, message);
+}
