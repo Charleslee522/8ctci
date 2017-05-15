@@ -60,13 +60,15 @@ app.post('/hook', (req, res) => {
 			runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
 			
 			resultMessage = runner.run();
-			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, resultMessage.message);
-
+			console.log(resultMessage);
+			console.log(resultMessage.message);
+			reply.sendMessage(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, resultMessage.message);
 		}
 		else {	// if runner is null or undefined
 			console.log(message.text);
-			var message = [{"type": "text", "text" : "요청 메시지가 잘못 되었습니다 :)"}];
-			reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, message);
+			// var message = [{"type": "text", "text" : "요청 메시지가 잘못 되었습니다 :)"}];
+			// reply.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, message);
+			// reply.sendMessage(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, resultMessage.message);
 		}
 	}
 	res.sendStatus(200);
