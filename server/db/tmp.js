@@ -38,9 +38,8 @@ tmpInstance.allFind(function(user){
 
 var tmpInstance2= tmp(json, updateJson);
 
-tmpInstance.remove();
+//tmpInstance.remove();
 tmpInstance2.findOneAndUpdate();
 
-tmpInstance.close();
+//tmpInstance.close();
 // //console.log(user);
-

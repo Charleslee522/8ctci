@@ -21,43 +21,39 @@ function MONGODB(preObject, newObject) {
   if (!(this instanceof MONGODB)) {
     return new MONGODB(preObject, newObject);
   }
-
   this.preObject = preObject;
   this.newObject = newObject;
 };
 
 
-function successCallback() {
-  console.log('success!!');
+function successCallback(str) {
+  console.log(str+'success!!');
+  mongoose.disconnect();
 }
   
 function failureCallback(err) {
   console.error('fail..', err);
+  mongoose.disconnect();
+
 }
   
 function saveObject(obj) {
   new Book(obj)
     .save()
-    .then(successCallback)
+    .then(successCallback("Save "))
     .catch(failureCallback);
 }
 
 function findOneAndUpdate(preObj,updateObj){
-  Book.findOneAndUpdate(preObj,updateObj,function(err,user){
-  if(err) throw err;
-
-  //console.log(user);
-});
-
+  Book.findOneAndUpdate(preObj,updateObj)
+    .then(successCallback("Update "))
+    .catch(failureCallback);
 } 
 
 function findOneAndRemove(obj){
-  Book.findOneAndRemove(obj, function(err) {
-  if (err) throw err;
-
-  // we have deleted the user
-  console.log('User deleted!');
-});
+  Book.findOneAndRemove(obj)
+    .then(successCallback("Remove "))
+    .catch(failureCallback);
 }
   
 MONGODB.prototype.save = function(){
@@ -67,9 +63,10 @@ MONGODB.prototype.save = function(){
 MONGODB.prototype.allFind = function(user){
 
 Book.find({},function(err,users){
-  if(err) throw err;
-  user(users);
-});}
+  if(err) throw failureCallback(err);
+  else 
+    user(users);
+}).then(successCallback("AllFind "));}
 
 MONGODB.prototype.findOneAndUpdate = function(){
   findOneAndUpdate(this.preObject,this.newObject)
@@ -79,7 +76,7 @@ MONGODB.prototype.remove = function(){
 }
 MONGODB.prototype.close = function()
 {
-  mongoose.connection.close();
+  mongoose.disconnect();
 }
 
 
