@@ -75,17 +75,18 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
     if (!hasAlarm(alarmName)) {
       resultMessage.result = false;
-      return;
+      return resultMaessage;
     }
     if (alarms[alarmName].active) {
       resultMessage.message = "이미 켜져있는 알람입니다.";
       resultMessage.result = false;
-      return;
+      return resultMaessage;
     }
 
     createJob(alarmName);
 
     alarms[alarmName].active = true;
+    resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 시작 되었습니다.';
     return resultMessage;
   };
@@ -145,12 +146,11 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
 
     var list_ = "";
-    if(alarms.length == 0) {
-      list_ += "등록된 알람이 없습니다!";
-    } else {
-      for (var i in alarms) {
-        list_ += alarms[i].print() + '\r\n';
-      }
+    for (var i in alarms) {
+      list_ += alarms[i].print() + '\r\n';
+    }
+    if (list_.length === 0){
+      list_ = '등록된 알람이 없습니다!';
     }
     resultMessage.message = list_;
     resultMessage.result = true;
