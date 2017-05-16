@@ -98,13 +98,14 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
 
     if (!hasAlarm(alarmName)) {
+      resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
       resultMessage.result = false;
-      return;
+      return resultMessage;
     }
     if (!alarms[alarmName].active) {
       resultMessage.message = '이미 꺼져있는 알람 입니다.';
       resultMessage.result = false;
-      return;
+      return resultMessage;
     }
 
     cancelJob(alarmName);
