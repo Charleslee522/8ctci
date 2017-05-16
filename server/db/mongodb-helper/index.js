@@ -66,8 +66,7 @@ Book.find({},function(err,users){
   if(err) throw failureCallback(err);
   else 
     user(users);
-    successCallback("AllFind ");
-});}
+}).then(successCallback("AllFind "));}
 
 MONGODB.prototype.findOneAndUpdate = function(){
   findOneAndUpdate(this.preObject,this.newObject)
