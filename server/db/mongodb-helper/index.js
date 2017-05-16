@@ -21,7 +21,6 @@ function MONGODB(preObject, newObject) {
   if (!(this instanceof MONGODB)) {
     return new MONGODB(preObject, newObject);
   }
-
   this.preObject = preObject;
   this.newObject = newObject;
 };
