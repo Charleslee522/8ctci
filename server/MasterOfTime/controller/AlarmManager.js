@@ -98,13 +98,14 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
 
     if (!hasAlarm(alarmName)) {
+      resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
       resultMessage.result = false;
-      return;
+      return resultMessage;
     }
     if (!alarms[alarmName].active) {
       resultMessage.message = '이미 꺼져있는 알람 입니다.';
       resultMessage.result = false;
-      return;
+      return resultMessage;
     }
 
     cancelJob(alarmName);
@@ -144,8 +145,12 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
 
     var list_ = "";
-    for (var i in alarms) {
-      list_ += alarms[i].print() + '\r\n';
+    if(alarms.length == 0) {
+      list_ += "등록된 알람이 없습니다!";
+    } else {
+      for (var i in alarms) {
+        list_ += alarms[i].print() + '\r\n';
+      }
     }
     resultMessage.message = list_;
     resultMessage.result = true;
