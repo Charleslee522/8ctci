@@ -32,13 +32,13 @@ describe('AlarmManager', function () {
     });
 
     it('show alarm list', function(){
-        var runner = Runner.getRunner('@alarm -ls your_alarm');
+        var runner = Runner.getRunner('@alarm -ls');
         resultMessage = runner.run();
         console.log(resultMessage.result);
         console.log(resultMessage.message);
         resultMessage.result.should.equal(true);        
-        var list = 'creator : malshan, time : * * * 5 * *, alarm name : my_alarm, description : Alarm!! 삐용~~ 삐용~~, room : <none>\r\n';
-        list+='creator : malshan, time : * * * 5 * *, alarm name : your_alarm, description : Alarm!! 삐용~~ 삐용~~, room : <none>\r\n';
+        var list = 'creator : malshan, time : * * * 5 * *, alarm name : my_alarm, description : null, room : <none>\r\n';
+        list+='creator : malshan, time : * * * 5 * *, alarm name : your_alarm, description : null, room : <none>\r\n';
         resultMessage.message.should.equal(list);
     });
 
@@ -67,7 +67,7 @@ describe('AlarmManager', function () {
         resultMessage.message.should.equal('모든 알람 제거 완료.');
         resultMessage.result.should.equal(true);
 
-        var runner2 = Runner.getRunner('@alarm -ls your_alarm');
+        var runner2 = Runner.getRunner('@alarm -ls');
         resultMessage = runner2.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('');
