@@ -83,7 +83,7 @@ describe('AlarmManager', function () {
         var runner2 = Runner.getRunner('@alarm -ls');
         resultMessage = runner2.run();
         resultMessage.result.should.equal(true);
-        resultMessage.message.should.equal('');
+        resultMessage.message.should.equal('등록된 알람이 없습니다!');
     });
 
 });
