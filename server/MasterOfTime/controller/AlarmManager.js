@@ -144,8 +144,12 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
 
     var list_ = "";
-    for (var i in alarms) {
-      list_ += alarms[i].print() + '\r\n';
+    if(alarms.length == 0) {
+      list_ += "등록된 알람이 없습니다!";
+    } else {
+      for (var i in alarms) {
+        list_ += alarms[i].print() + '\r\n';
+      }
     }
     resultMessage.message = list_;
     resultMessage.result = true;
