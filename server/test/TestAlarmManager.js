@@ -34,15 +34,28 @@ describe('AlarmManager', function () {
     it('show alarm list', function(){
         var runner = Runner.getRunner('@alarm -ls');
         resultMessage = runner.run();
-        console.log(resultMessage.result);
-        console.log(resultMessage.message);
         resultMessage.result.should.equal(true);        
-        var list = 'creator : malshan, time : * * * 5 * *, alarm name : my_alarm, description : null, room : <none>\r\n';
-        list+='creator : malshan, time : * * * 5 * *, alarm name : your_alarm, description : null, room : <none>\r\n';
+        var list = 'alarm name : my_alarm, time : * * * 5 * *, description : null\r\n';
+        list+='alarm name : your_alarm, time : * * * 5 * *, description : null\r\n';
         resultMessage.message.should.equal(list);
     });
+    
+    it('alarm off', function(){
+        var runner = Runner.getRunner('@alarm -off my_alarm');
+        resultMessage = runner.run();
+        resultMessage.result.should.equal(true);
+        resultMessage.message.should.equal('"my_alarm" 으로 등록된 알람이 중지 되었습니다.');
+    });
 
-    it('remeve alarm', function(){
+    it('alarm on', function(){
+        var runner = Runner.getRunner('@alarm -on my_alarm');
+        resultMessage = runner.run();
+        resultMessage.result.should.equal(true);
+        console.log(resultMessage.message);
+        resultMessage.message.should.equal('"my_alarm" 으로 등록된 알람이 시작 되었습니다.');
+    });
+
+    it('remove alarm', function(){
         var runner = Runner.getRunner('@alarm -rm my_alarm');
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);
