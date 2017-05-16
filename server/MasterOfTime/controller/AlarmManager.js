@@ -145,6 +145,7 @@ function AlarmManager() {
 
     var list_ = "";
     if(alarms.length == 0) {
+      list_ += String(alarm.length);
       list_ += "등록된 알람이 없습니다!";
     } else {
       for (var i in alarms) {
