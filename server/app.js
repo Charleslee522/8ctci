@@ -60,8 +60,6 @@ app.post('/hook', (req, res) => {
 			runner.setChannelAccessToken(LINE_CONSTS.CHANNEL_ACCESS_TOKEN);
 			
 			resultMessage = runner.run();
-			console.log(resultMessage);
-			console.log(resultMessage.message);
 			reply.sendMessage(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, resultMessage.message);
 		}
 		else {	// if runner is null or undefined
