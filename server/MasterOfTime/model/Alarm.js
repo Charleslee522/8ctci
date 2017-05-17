@@ -18,9 +18,17 @@ Alarm.prototype.print = function() {
     }else{
         desc = this.desc;
     }
+
+    var status;
+    if(this.active){
+        status = "켜짐";
+    }else{
+        status = "꺼짐";
+    }
     return  "이름: " + this.alarmName +
             "\r\n시간: " + this.time +       
             "\r\n설명: " + desc +
+            "\r\n상태: "+ status +
             "\r\n";
 };
 
