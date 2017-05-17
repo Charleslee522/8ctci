@@ -30,7 +30,7 @@ function AlarmManager() {
       case 'off':
         resultMessage = off(name); break;
       case 'list':
-        resultMessage = showList(); break;
+        resultMessage = showList(id); break;
       default:
         logger.info('\'' + action + '\' 등록되지 않은 명령어 입니다.');
         console.log('\'' + action + '\' 등록되지 않은 명령어 입니다.'); break;
@@ -141,13 +141,14 @@ function AlarmManager() {
   /**
    * 등록된 알람의 목록을 반환합니다.
    */
-  var showList = function () {
+  var showList = function (id) {
 
     var resultMessage = new ResultMessage();
-
     var list_ = "";
     for (var i in alarms) {
-      list_ += alarms[i].print() + '\r\n';
+      if(id === undefined || id == alarms[i].id) {
+        list_ += alarms[i].print() + '\r\n';
+      }
     }
     if (list_.length === 0){
       list_ = '등록된 알람이 없습니다!';
