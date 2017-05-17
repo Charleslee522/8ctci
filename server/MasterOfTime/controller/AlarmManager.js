@@ -200,7 +200,7 @@ function AlarmManager() {
    * @param {알람 이름} alarmName 
    */
   var createJob = function (alarmName) {
-    alarms[alarmName].job = schedule.scheduleJob(alarms[alarmName].getRegistTime(), function () {
+    alarms[alarmName].job = schedule.scheduleJob(alarms[alarmName].time, function () {
       request.post({
         url: 'http://localhost:8000/alarm',
         body: {
