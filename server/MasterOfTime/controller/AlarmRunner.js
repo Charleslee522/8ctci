@@ -48,9 +48,10 @@ AlarmRunner.prototype.getId = function() {
 
 function getRunner(cmd) {
 	if(cmd.startsWith("@alarm ")) {
-		//if(!runner) {
-			runner = new AlarmRunner(cmd.substr(7));
-		//}
+		runner = new AlarmRunner(cmd.substr(7));
+		return runner;
+	} else if(cmd.startsWith("@알람 ")) {
+		runner = new AlarmRunner(cmd.substr(4));
 		return runner;
 	} else {
 		return null;

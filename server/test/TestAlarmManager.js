@@ -8,7 +8,7 @@ var should = chai.should();
 
 describe('AlarmManager', function () {
     it('create', function() {
-        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n my_alarm');
+        var runner = Runner.getRunner('@alarm -c -t "* * 5 * *" -n my_alarm');
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(true);
@@ -16,7 +16,7 @@ describe('AlarmManager', function () {
     });
 
     it('create use exist name', function(){
-        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n my_alarm');
+        var runner = Runner.getRunner('@알람 -c -t "* * 5 * *" -n my_alarm');
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(false);
@@ -24,7 +24,7 @@ describe('AlarmManager', function () {
     });
 
     it('create use new name', function(){
-        var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n your_alarm');
+        var runner = Runner.getRunner('@alarm -c -t "* * 5 * *" -n your_alarm');
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(true);
@@ -35,8 +35,8 @@ describe('AlarmManager', function () {
         var runner = Runner.getRunner('@alarm -ls');
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);        
-        var list = 'alarm name : my_alarm, time : * * * 5 * *, description : null\r\n';
-        list+='alarm name : your_alarm, time : * * * 5 * *, description : null\r\n';
+        var list = '알람 이름: my_alarm, 설정 시간: * * 5 * *, 설명: null\r\n';
+        list+='알람 이름: your_alarm, 설정 시간: * * 5 * *, 설명: null\r\n';
         resultMessage.message.should.equal(list);
     });
     
