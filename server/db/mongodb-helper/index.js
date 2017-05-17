@@ -5,9 +5,6 @@ var Book = require('./models/book');
 
 var db_server  = process.env.DB_ENV || 'primary';
 
-  // Use native promises
-mongoose.Promise = global.Promise;
-  
   // CONNECT TO MONGODB SERVER
 mongoose
   .connect('mongodb://localhost/db')
