@@ -1,11 +1,10 @@
 
-const mongoose = require('mongoose');
+ var mongoose = require('mongoose');
   // DEFINE MODEL
-const Book = require('./models/book');
+var Book = require('./models/book');
 
-  // Use native promises
-mongoose.Promise = global.Promise;
-  
+var db_server  = process.env.DB_ENV || 'primary';
+
   // CONNECT TO MONGODB SERVER
 mongoose
   .connect('mongodb://localhost/db')
@@ -25,16 +24,19 @@ function MONGODB(preObject, newObject) {
   this.newObject = newObject;
 };
 
+var gracefulExit = function() { 
+  mongoose.connection.close(function () {
+    console.log('Mongoose default connection with DB :' + db_server + ' is disconnected through app termination');
+    process.exit(0);
+  });
+}
 
 function successCallback(str) {
   console.log(str+'success!!');
-  mongoose.disconnect();
 }
   
 function failureCallback(err) {
   console.error('fail..', err);
-  mongoose.disconnect();
-
 }
   
 function saveObject(obj) {
@@ -55,6 +57,9 @@ function findOneAndRemove(obj){
     .then(successCallback("Remove "))
     .catch(failureCallback);
 }
+
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
   
 MONGODB.prototype.save = function(){
   saveObject(this.preObject)
