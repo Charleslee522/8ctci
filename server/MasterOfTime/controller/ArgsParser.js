@@ -120,7 +120,6 @@
              break;
            case 'off':
              result.setQuery('off');
-             //result.setOff(command[0].replace(wsReplacerRegex, ' '));
              result.setName(command[0].replace(wsReplacerRegex, ' '));
              break;
            case 'rm':
@@ -129,6 +128,7 @@
              result.setName(command[0].replace(wsReplacerRegex, ' '));
              break;
            case 'ls':
+           case 'list':
              result.setQuery('list');
              break;
            default:
