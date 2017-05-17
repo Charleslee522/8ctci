@@ -31,12 +31,20 @@ describe('AlarmManager', function () {
         resultMessage.message.should.equal('알람 생성 완료!!');
     });
 
+    it('off alarm', function(){
+        var runner = Runner.getRunner('@alarm -off your_alarm');
+        resultMessage = runner.run();
+
+        resultMessage.result.should.equal(true);
+        resultMessage.message.should.equal('"your_alarm" 으로 등록된 알람이 중지 되었습니다.');
+    });
+
     it('show alarm list', function(){
         var runner = Runner.getRunner('@alarm -ls');
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);        
-        var list = '알람 이름: my_alarm, 설정 시간: * * 5 * *, 설명: null\r\n';
-        list+='알람 이름: your_alarm, 설정 시간: * * 5 * *, 설명: null\r\n';
+        var list = '이름: my_alarm\r\n시간: * * 5 * *\r\n설명: \r\n상태: 켜짐\r\n\r\n';
+        list+='이름: your_alarm\r\n시간: * * 5 * *\r\n설명: \r\n상태: 꺼짐\r\n\r\n';
         resultMessage.message.should.equal(list);
     });
     
