@@ -12,9 +12,16 @@ function Alarm(creator, time, alarmName, desc, room, id) {
 }
 
 Alarm.prototype.print = function() {
-    return  "알람 이름: " + this.alarmName +
-            ", 설정 시간: " + this.time +       
-            ", 설명: " + this.desc;
+    var desc;
+    if(this.desc === null){
+        desc="";
+    }else{
+        desc = this.desc;
+    }
+    return  "이름: " + this.alarmName +
+            "\r\n시간: " + this.time +       
+            "\r\n설명: " + desc +
+            "\r\n";
 };
 
 module.exports = Alarm;
