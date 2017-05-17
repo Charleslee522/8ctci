@@ -11,10 +11,18 @@ function Alarm(creator, time, alarmName, desc, room, id) {
     this.id = id;
 }
 
+Alarm.prototype.getOrgTime = function() {
+    return this.time;
+}
+
+Alarm.prototype.getRegistTime = function() {
+    return '0 ' + this.time;
+}
+
 Alarm.prototype.print = function() {
-    return  "alarm name : " + this.alarmName +
-            ", time : " + this.time +       
-            ", description : " + this.desc;
+    return  "알람 이름: " + this.alarmName +
+            ", 설정 시간: " + this.time +       
+            ", 설명: " + this.desc;
 };
 
 module.exports = Alarm;
