@@ -1,11 +1,10 @@
 
-const mongoose = require('mongoose');
+ var mongoose = require('mongoose');
   // DEFINE MODEL
-const Book = require('./models/book');
+var Book = require('./models/book');
 
-  // Use native promises
-mongoose.Promise = global.Promise;
-  
+var db_server  = process.env.DB_ENV || 'primary';
+
   // CONNECT TO MONGODB SERVER
 mongoose
   .connect('mongodb://localhost/db')
@@ -21,14 +20,19 @@ function MONGODB(preObject, newObject) {
   if (!(this instanceof MONGODB)) {
     return new MONGODB(preObject, newObject);
   }
-
   this.preObject = preObject;
   this.newObject = newObject;
 };
 
+var gracefulExit = function() { 
+  mongoose.connection.close(function () {
+    console.log('Mongoose default connection with DB :' + db_server + ' is disconnected through app termination');
+    process.exit(0);
+  });
+}
 
-function successCallback() {
-  console.log('success!!');
+function successCallback(str) {
+  console.log(str+'success!!');
 }
   
 function failureCallback(err) {
@@ -38,27 +42,24 @@ function failureCallback(err) {
 function saveObject(obj) {
   new Book(obj)
     .save()
-    .then(successCallback)
+    .then(successCallback("Save "))
     .catch(failureCallback);
 }
 
 function findOneAndUpdate(preObj,updateObj){
-  Book.findOneAndUpdate(preObj,updateObj,function(err,user){
-  if(err) throw err;
-
-  //console.log(user);
-});
-
+  Book.findOneAndUpdate(preObj,updateObj)
+    .then(successCallback("Update "))
+    .catch(failureCallback);
 } 
 
 function findOneAndRemove(obj){
-  Book.findOneAndRemove(obj, function(err) {
-  if (err) throw err;
-
-  // we have deleted the user
-  console.log('User deleted!');
-});
+  Book.findOneAndRemove(obj)
+    .then(successCallback("Remove "))
+    .catch(failureCallback);
 }
+
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
   
 MONGODB.prototype.save = function(){
   saveObject(this.preObject)
@@ -67,9 +68,10 @@ MONGODB.prototype.save = function(){
 MONGODB.prototype.allFind = function(user){
 
 Book.find({},function(err,users){
-  if(err) throw err;
-  user(users);
-});}
+  if(err) throw failureCallback(err);
+  else 
+    user(users);
+}).then(successCallback("AllFind "));}
 
 MONGODB.prototype.findOneAndUpdate = function(){
   findOneAndUpdate(this.preObject,this.newObject)
@@ -79,7 +81,7 @@ MONGODB.prototype.remove = function(){
 }
 MONGODB.prototype.close = function()
 {
-  mongoose.connection.close();
+  mongoose.disconnect();
 }
 
 
