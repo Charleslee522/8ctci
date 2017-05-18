@@ -113,4 +113,12 @@ describe('Alarm Runner', function() {
         var runner = Runner.getRunner('@alam -c -t "* * * 5 * *" -n jw');
         should.equal(runner, null);
     });
+    
+    it('Wrong cmd2', () => {
+        try{
+            var runner = Runner.getRunner('@알람 -ㅣㄴ');
+        } catch (e) {
+            should.equal(runner, undefined);
+        }
+    });
 });

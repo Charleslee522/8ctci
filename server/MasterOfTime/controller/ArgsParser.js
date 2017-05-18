@@ -6,7 +6,7 @@
    var parser = new ArgumentParser({
      version: '0.0.1',
      addHelp: true,
-     description: 'Alarm bot Argrment Parser'
+     description: 'Alarm bot Argument Parser'
    });
    parser.addArgument(
      ['-c', '-mk'], {
@@ -16,25 +16,25 @@
    );
    parser.addArgument(
      ['-t', '-time'], {
-       help: 'alarm time',
+       help: 'time',
        nargs: 1
      }
    );
    parser.addArgument(
      ['-n', '-name'], {
-       help: 'alarm name',
+       help: 'name',
        nargs: 1
      }
    );
    parser.addArgument(
      ['-d', '-description'], {
-       help: 'alarm description',
+       help: 'description',
        nargs: 1
      }
    );
    parser.addArgument(
      ['-ls', '-list'], {
-       help: 'alram list',
+       help: 'list',
        nargs: 0
      }
    );
@@ -88,6 +88,7 @@
 
    ArgsParser.prototype.parse = function(commands) {
      var args = mergeQuotedStr(commands.split(' '));
+     parser.debug = true;
      args = parser.parseArgs(args);
 
      var ParsedCommands = require('../model/ParsedCommands');
