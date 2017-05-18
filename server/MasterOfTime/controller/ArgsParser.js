@@ -89,6 +89,14 @@
    ArgsParser.prototype.parse = function(commands) {
      var args = mergeQuotedStr(commands.split(' '));
      parser.debug = true;
+     parser.exit = function(status, message) {
+        if (status === 0) {
+          this._printMessage(message);
+        } else {
+          this._printMessage(message, process.stderr);
+        }
+        throw Error('Wrong Argument');
+     }
      args = parser.parseArgs(args);
 
      var ParsedCommands = require('../model/ParsedCommands');

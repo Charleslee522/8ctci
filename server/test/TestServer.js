@@ -80,6 +80,33 @@ describe('Server POST /hook', function() {
       )
       .expect(200, done)
   });
+
+  it('alarm wrong3', function(done) {
+    request(app)
+      .post('/hook')
+      .send(
+        {
+            "events": [
+                {
+                    "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+                    "type": "message",
+                    "timestamp": 1462629479859,
+                    "source": {
+                        "type": "user",
+                        "userId": "U206d25c2ea6bd87c17655609a1c37cb8"
+                    },
+                    "message": {
+                        "id": "325708",
+                        "type": "text",
+                        "text": '@alarm -h'
+                    }
+                }
+            ]
+        }
+      )
+      .expect(200, done)
+  });
+
   it('alarm list', function(done) {
     request(app)
       .post('/hook')

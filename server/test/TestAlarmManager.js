@@ -121,4 +121,12 @@ describe('Alarm Runner', function() {
             should.equal(runner, undefined);
         }
     });
+
+    it('Wrong cmd3', () => {
+        try{
+            var runner = Runner.getRunner('@알람 -h');
+        } catch (e) {
+            should.equal(runner, undefined);
+        }
+    });
 });
