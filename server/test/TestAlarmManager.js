@@ -9,6 +9,7 @@ var should = chai.should();
 describe('AlarmManager', function () {
     it('create', function() {
         var runner = Runner.getRunner('@alarm -c -t "* * 5 * *" -n my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(true);
@@ -17,6 +18,7 @@ describe('AlarmManager', function () {
 
     it('create use exist name', function(){
         var runner = Runner.getRunner('@알람 -c -t "* * 5 * *" -n my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(false);
@@ -25,6 +27,7 @@ describe('AlarmManager', function () {
 
     it('create use new name', function(){
         var runner = Runner.getRunner('@alarm -c -t "* * 5 * *" -n your_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(true);
@@ -33,6 +36,7 @@ describe('AlarmManager', function () {
 
     it('off alarm', function(){
         var runner = Runner.getRunner('@alarm -off your_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
 
         resultMessage.result.should.equal(true);
@@ -41,6 +45,7 @@ describe('AlarmManager', function () {
 
     it('show alarm list', function(){
         var runner = Runner.getRunner('@alarm -ls');
+        runner.setId(1);
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);        
         var list = '이름: my_alarm\r\n시간: * * 5 * *\r\n설명: \r\n상태: 켜짐\r\n\r\n';
@@ -50,6 +55,7 @@ describe('AlarmManager', function () {
     
     it('alarm off', function(){
         var runner = Runner.getRunner('@alarm -off my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('"my_alarm" 으로 등록된 알람이 중지 되었습니다.');
@@ -57,6 +63,7 @@ describe('AlarmManager', function () {
 
     it('alarm on', function(){
         var runner = Runner.getRunner('@alarm -on my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);
         console.log(resultMessage.message);
@@ -65,6 +72,7 @@ describe('AlarmManager', function () {
 
     it('remove alarm', function(){
         var runner = Runner.getRunner('@alarm -rm my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('\"my_alarm\" 알람을 제거하였습니다.');
@@ -72,6 +80,7 @@ describe('AlarmManager', function () {
 
     it('remove again', function(){
         var runner = Runner.getRunner('@alarm -rm my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
         resultMessage.result.should.equal(false);
         resultMessage.message.should.equal('\"my_alarm\" 으로 등록된 알람이 없습니다.');
@@ -79,6 +88,7 @@ describe('AlarmManager', function () {
 
     it('clear alarm manager', function () {
         var runner = Runner.getRunner('@alarm -c -t "* * * 5 * *" -n my_alarm');
+        runner.setId(1);
         resultMessage = runner.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('알람 생성 완료!!');
@@ -89,6 +99,7 @@ describe('AlarmManager', function () {
         resultMessage.result.should.equal(true);
 
         var runner2 = Runner.getRunner('@alarm -ls');
+        runner2.setId(1);
         resultMessage = runner2.run();
         resultMessage.result.should.equal(true);
         resultMessage.message.should.equal('등록된 알람이 없습니다!');

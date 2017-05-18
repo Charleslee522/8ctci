@@ -24,11 +24,11 @@ function AlarmManager() {
       case 'create':
         resultMessage = create(creator, time, name, desc, room, id); break;
       case 'remove':
-        resultMessage = remove(name); break;
+        resultMessage = remove(name, id); break;
       case 'on':
-        resultMessage = on(name); break;
+        resultMessage = on(name, id); break;
       case 'off':
-        resultMessage = off(name); break;
+        resultMessage = off(name, id); break;
       case 'list':
         resultMessage = showList(id); break;
       default:
@@ -49,7 +49,7 @@ function AlarmManager() {
   var create = function (creator, time, alarmName, desc, room, id) {
 
     var resultMessage = new ResultMessage();
-    if (hasAlarm(alarmName)) {
+    if (hasAlarm(alarmName, id)) {
       resultMessage.result = false;
       resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 이미 있습니다. 다른 이름으로 등록해주세요.';
       return resultMessage;
@@ -58,9 +58,9 @@ function AlarmManager() {
     //create alarm
     var alarm = new Alarm(creator, time, alarmName, desc, room, id);
 
-    alarms[alarmName] = alarm;
+    alarms[alarmName+id] = alarm;
 
-    createJob(alarmName);
+    createJob(alarmName,id);
     alarm.active = true;
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
@@ -71,21 +71,21 @@ function AlarmManager() {
    * 알람을 작동 시킵니다.
    * @param {알람 이름} alarmName
    */
-  var on = function (alarmName) {
+  var on = function (alarmName, id) {
     var resultMessage = new ResultMessage();
-    if (!hasAlarm(alarmName)) {
+    if (!hasAlarm(alarmName, id)) {
       resultMessage.result = false;
       return resultMaessage;
     }
-    if (alarms[alarmName].active) {
+    if (alarms[alarmName+id].active) {
       resultMessage.message = "이미 켜져있는 알람입니다.";
       resultMessage.result = false;
       return resultMaessage;
     }
 
-    createJob(alarmName);
+    createJob(alarmName,id);
 
-    alarms[alarmName].active = true;
+    alarms[alarmName+id].active = true;
     resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 시작 되었습니다.';
     return resultMessage;
@@ -95,23 +95,23 @@ function AlarmManager() {
    * 알람을 중지 시킵니다.
    * @param {알람 이름} alarmName 
    */
-  var off = function (alarmName) {
+  var off = function (alarmName, id) {
     var resultMessage = new ResultMessage();
 
-    if (!hasAlarm(alarmName)) {
+    if (!hasAlarm(alarmName, id)) {
       resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
       resultMessage.result = false;
       return resultMessage;
     }
-    if (!alarms[alarmName].active) {
+    if (!alarms[alarmName+id].active) {
       resultMessage.message = '이미 꺼져있는 알람 입니다.';
       resultMessage.result = false;
       return resultMessage;
     }
 
-    cancelJob(alarmName);
+    cancelJob(alarmName,id);
 
-    alarms[alarmName].active = false;
+    alarms[alarmName+id].active = false;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 중지 되었습니다.';
     resultMessage.result = true;
     return resultMessage;
@@ -121,17 +121,17 @@ function AlarmManager() {
    * 알람을 제거 합니다.
    * @param {알람 이름} alarmName 
    */
-  var remove = function (alarmName) {
+  var remove = function (alarmName, id) {
     var resultMessage = new ResultMessage();
 
-    if (!hasAlarm(alarmName)) {
+    if (!hasAlarm(alarmName,id)) {
       resultMessage.result = false;
       resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
       return resultMessage;
     }
 
-    cancelJob(alarmName);
-    delete alarms[alarmName];
+    cancelJob(alarmName,id);
+    delete alarms[alarmName+id];
     resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 알람을 제거하였습니다.';
     
@@ -176,8 +176,8 @@ function AlarmManager() {
    * 알람 목록에 해당 알람이 있는지 여부를 반환 합니다.
    * @param {알람 이름} alarmName 
    */
-  var hasAlarm = function (alarmName) {
-    if (alarms[alarmName] === undefined) {
+  var hasAlarm = function (alarmName, id) {
+    if (alarms[alarmName+id] === undefined) {
       return false;
     }
     return true;
@@ -199,14 +199,14 @@ function AlarmManager() {
    * 알람의 job을 생성합니다.
    * @param {알람 이름} alarmName 
    */
-  var createJob = function (alarmName) {
-    alarms[alarmName].job = schedule.scheduleJob(alarms[alarmName].time, function () {
+  var createJob = function (alarmName, id) {
+    alarms[alarmName+id].job = schedule.scheduleJob(alarms[alarmName+id].time, function () {
       request.post({
         url: 'http://localhost:8000/alarm',
         body: {
-          desc: alarms[alarmName].desc,
+          desc: alarms[alarmName+id].desc,
           alarmName: alarmName,
-          id: alarms[alarmName].id
+          id: alarms[alarmName+id].id
         },
         json: true
       },
@@ -223,12 +223,12 @@ function AlarmManager() {
    * 알람의 job을 중지(제거) 합니다.
    * @param {알람 이름} alarmName 
    */
-  var cancelJob = function (alarmName) {
-    if (alarms[alarmName].job === undefined) {
+  var cancelJob = function (alarmName, id) {
+    if (alarms[alarmName+id].job === undefined) {
       logger.info('job 을 찾을 수 없습니다. (\"' + alarmName + '\")');
       return;
     }
-    alarms[alarmName].job.cancel();
+    alarms[alarmName+id].job.cancel();
   };
 
 /**
@@ -236,7 +236,7 @@ function AlarmManager() {
 */
   this.clearAlarms = function () {
     for (var i in alarms) {
-      remove(alarms[i].alarmName);
+      remove(alarms[i].alarmName, alarms[i].id);
     }
 
     resultMessage.message = "모든 알람 제거 완료.";
