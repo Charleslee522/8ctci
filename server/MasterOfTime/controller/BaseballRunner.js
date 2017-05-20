@@ -40,11 +40,11 @@ function BaseballRunner(cmd) {
 	this.baseballManager = getBaseballManager();
     if(cmd.trim() == '시작') {
         this.query = "create";
-    } else if (cmd.match('\\d \\d \\d')) {
+    } else if (cmd.match('\\d[ .,;:_-]+\\d[ .,;:_-]+\\d')) {
         this.query = "run";
         this.input = cmd.split(' ');
     } else {
-        this.query = "error";
+        throw Error(e);
     }
 }
 
