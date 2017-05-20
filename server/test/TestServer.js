@@ -179,7 +179,33 @@ describe('Baseball Server Test', function() {
                     "message": {
                         "id": "325708",
                         "type": "text",
-                        "text": '@야구 1  41 9'
+                        "text": '@야구 1 2 9'
+                    }
+                }
+            ]
+        }
+      )
+      .expect(200, done)
+  });
+  
+  it('야구 에러', function(done) {
+    request(app)
+      .post('/hook')
+      .send(
+        {
+            "events": [
+                {
+                    "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+                    "type": "message",
+                    "timestamp": 1462629479859,
+                    "source": {
+                        "type": "user",
+                        "userId": "U206d25c2ea6bd87c17655609a1c37cb8"
+                    },
+                    "message": {
+                        "id": "325708",
+                        "type": "text",
+                        "text": '@야구 33 2 99'
                     }
                 }
             ]
