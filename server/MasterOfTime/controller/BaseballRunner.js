@@ -40,11 +40,17 @@ function BaseballRunner(cmd) {
 	this.baseballManager = getBaseballManager();
     if(cmd.trim() == '시작') {
         this.query = "create";
-    } else if (cmd.match('\\d[ .,;:_-]+\\d[ .,;:_-]+\\d')) {
-        this.query = "run";
-        this.input = cmd.split(' ');
     } else {
-        throw Error(e);
+        var re = cmd.match('(\\d)[ .,;:_-]+(\\d)[ .,;:_-]+(\\d)');
+        if(re && re[0].length == cmd.length) {
+            this.query = "run";
+            this.input = [];
+            this.input.push(re[1]);
+            this.input.push(re[2]);
+            this.input.push(re[3]);
+        } else {
+            throw Error(e);
+        }
     }
 }
 
