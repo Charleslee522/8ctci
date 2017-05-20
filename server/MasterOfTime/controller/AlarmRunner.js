@@ -2,6 +2,8 @@
 var getAlarmManager = require('./AlarmManager');
 
 var getArgsParser = require('./ArgsParser');
+var BaseballRunner = require('./BaseballRunner');
+
 var runner = null;
 
 function AlarmRunner(cmd) {
@@ -48,14 +50,17 @@ AlarmRunner.prototype.getId = function() {
 
 function getRunner(cmd) {
 	if(cmd.startsWith("@alarm ")) {
-		runner = new AlarmRunner(cmd.substr(7));
-		return runner;
+		runner = new AlarmRunner(cmd.substr("@alarm ".length));
 	} else if(cmd.startsWith("@알람 ")) {
-		runner = new AlarmRunner(cmd.substr(4));
-		return runner;
+		runner = new AlarmRunner(cmd.substr("@알람 ".length));
+	} else if(cmd.startsWith("@baseball ")) {
+		runner = new BaseballRunner(cmd.substr("@baseball ".length));
+	} else if(cmd.startsWith("@야구 ")) {
+		runner = new BaseballRunner(cmd.substr("@야구 ".length));
 	} else {
-		return null;
+		runner = null;
 	}
+	return runner;
 }
 
 module.exports = 
