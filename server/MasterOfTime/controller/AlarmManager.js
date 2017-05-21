@@ -3,11 +3,36 @@ var request = require('request');
 var Alarm = require('../model/Alarm');
 var ResultMessage = require('./ResultMessage');
 var logger = require('logger').createLogger('server.log');
+var MongoHelper = require('../../db/mongodb-helper');
+
 
 var alarmManager = null;
 
+
 function AlarmManager() {
   var alarms = [];
+  /**
+   * DB에 있는 알람을 읽어와 등록합니다.
+  */
+  this.initAlarm = function () {
+    var initFunc = function (alarmModels) {
+      logger.info("init 중입니다!");
+      console.log("init 중입니다!");
+      alarmModels.forEach(function (model) {
+        alarmModel = model._doc;
+        var alarmName = alarmModel.alarmName;
+        var id = alarmModel.id;
+        var alarm = new Alarm("", alarmModel.time, alarmName, alarmModel.desc, "", alarmModel.id);
+        alarms[alarmName+id] = alarm;
+        if (alarmModel.active === true) {
+          createJob(alarmName,id);
+        }
+      });
+    };
+    var dbInstance = new MongoHelper();
+    dbInstance.allFind(initFunc);
+    return;
+  };
 
   this.run = function (alarmRunner) {
     //call arg parser
@@ -18,7 +43,7 @@ function AlarmManager() {
     var room = "<none>";
     var action = alarmRunner.getQuery();
     var id = alarmRunner.getId();
-    
+
     logger.info(action);
     switch (action) {
       case 'create':
@@ -59,9 +84,12 @@ function AlarmManager() {
     var alarm = new Alarm(creator, time, alarmName, desc, room, id);
 
     alarms[alarmName+id] = alarm;
-
-    createJob(alarmName,id);
+    createJob(alarmName,id);    
     alarm.active = true;
+
+    var dbInstance = new MongoHelper(changeJson(alarm));
+    dbInstance.save();
+
     resultMessage.result = true;
     resultMessage.message = "알람 생성 완료!!";
     return resultMessage;
@@ -86,6 +114,10 @@ function AlarmManager() {
     createJob(alarmName,id);
 
     alarms[alarmName+id].active = true;
+
+    var dbInstance = new MongoHelper({"alarmName":alarmName,"id":id},changeJson(alarms[alarmName+id]));
+    dbInstance.findOneAndUpdate();
+
     resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 시작 되었습니다.';
     return resultMessage;
@@ -113,6 +145,10 @@ function AlarmManager() {
 
     alarms[alarmName+id].active = false;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 중지 되었습니다.';
+
+    var dbInstance = new MongoHelper({"alarmName":alarmName,"id":id},changeJson(alarms[alarmName+id]));
+    dbInstance.findOneAndUpdate();
+
     resultMessage.result = true;
     return resultMessage;
   };
@@ -130,11 +166,15 @@ function AlarmManager() {
       return resultMessage;
     }
 
+    var dbInstance = new MongoHelper(changeJson(alarms[alarmName+id]));
+    dbInstance.remove();
+
     cancelJob(alarmName,id);
     delete alarms[alarmName+id];
+    
     resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 알람을 제거하였습니다.';
-    
+
     return resultMessage;
   };
 
@@ -146,11 +186,11 @@ function AlarmManager() {
     var resultMessage = new ResultMessage();
     var list_ = "";
     for (var i in alarms) {
-      if(id === undefined || id == alarms[i].id) {
+      if (id === undefined || id == alarms[i].id) {
         list_ += alarms[i].print() + '\r\n';
       }
     }
-    if (list_.length === 0){
+    if (list_.length === 0) {
       list_ = '등록된 알람이 없습니다!';
     }
     resultMessage.message = list_;
@@ -183,16 +223,18 @@ function AlarmManager() {
     return true;
   };
 
-  /**
-   * 알람의 설명을 반환 합니다.
-   * @param {알람 이름} alarmName
-   */
-  this.getAlarmDesc = function (alarmName) {
-    if (!hasAlarm(alarmName)) {
-      resultMessage.result = false;
-      return;
-    }
-    return alarms[alarmName].desc;
+  var changeJson = function (alarm) {
+    var jsonModel = {
+      alarmName: alarm.alarmName,
+      creator: alarm.creatro,
+      time: alarm.time,
+      active: alarm.active,
+      id: alarm.id,
+      room: alarm.romm,
+      desc: alarm.desc
+    };
+
+    return jsonModel;
   };
 
   /**
@@ -231,9 +273,9 @@ function AlarmManager() {
     alarms[alarmName+id].job.cancel();
   };
 
-/**
-* 모든 알람을 제거 합니다.
-*/
+  /**
+  * 모든 알람을 제거 합니다.
+  */
   this.clearAlarms = function () {
     for (var i in alarms) {
       remove(alarms[i].alarmName, alarms[i].id);
@@ -244,14 +286,17 @@ function AlarmManager() {
 
     return resultMessage;
   };
+
+
 }
 
 function getAlarmManager() {
-    if(!alarmManager) {
-      alarmManager = new AlarmManager();
-    }
-    return alarmManager;
+  if (!alarmManager) {
+    alarmManager = new AlarmManager();
+    alarmManager.initAlarm();
   }
+  return alarmManager;
+}
 
 
 module.exports = getAlarmManager;
