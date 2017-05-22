@@ -9,7 +9,7 @@ const Runner = require('./MasterOfTime/controller/AlarmRunner');
 
 var alarmManager = new AlarmManager();
 
-const requestSender = require('request');
+//const requestSender = require('request');
 const push = require('./MasterOfTime/controller/push')
 const reply = require('./MasterOfTime/controller/reply');
 const LINE_CONSTS = require('./MasterOfTime/model/line');
