@@ -1,4 +1,3 @@
-
 Example:
 use '@알람 -c -t "55 17 * * 1-5" -n "퇴근시간!" -d "곧 퇴근시간입니다!"'
 use '@alarm -c -t "25 12 * * 1-5" -n "점심시간!" -d "곧 점심시간입니다!"'
@@ -10,4 +9,3 @@ https://www.npmjs.com/package/node-schedule
 
 Homepage
 http://8ctci.weebly.com/how-to.html
-

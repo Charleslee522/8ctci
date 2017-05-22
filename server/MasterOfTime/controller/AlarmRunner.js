@@ -13,7 +13,7 @@ function AlarmRunner(cmd) {
 		this.alarmManager = getAlarmManager();
 	} catch (e) {
 		var message = null;
-		if(e.message.startsWith('\r\nExample:')) {
+		if(e.message.startsWith('Example:')) {
 			message = e.message;
 		} else {
 			message = '잘못된 명령어가 입력되었습니다.';
