@@ -1,9 +1,9 @@
 var express = require('express');
-var app = express();
+var appReflection = express();
 var bodyParser = require('body-parser');
 var fs = require('fs');
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+appReflection.use(bodyParser.urlencoded({extended: false}));
+appReflection.use(bodyParser.json());
 var request = require('request');
 
 function send(channelAccessToken, replyToken_, messages_) {
@@ -30,13 +30,13 @@ function send(channelAccessToken, replyToken_, messages_) {
 	});
 };
 
-app.set('port', process.env.PORT || 8000);
+appReflection.set('port', process.env.PORT || 8000);
 
-var https_server = app.listen(app.get('port'), function() {
+var https_server = appReflection.listen(appReflection.get('port'), function() {
 	console.log('Express https server listening on port ' + https_server.address().port);
 });
 
-app.get('/', (req, res) => {
+appReflection.get('/', (req, res) => {
 	console.log('[GET]/');
 	res.writeHead(200, {'Content-Type' : 'text/html'});
 	res.end('<h1><a href="http://8ctci.weebly.com">Hello, I\'m the Master of Time!</a><h1>');
@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 
 const CHANNEL_ACCESS_TOKEN="";
 
-app.post('/hook', (req, res) => {
+appReflection.post('/hook', (req, res) => {
 	var eventObj = req.body.events[0];
 	var source = eventObj.source;
 	var message = eventObj.message;
@@ -60,4 +60,4 @@ app.post('/hook', (req, res) => {
 	res.sendStatus(200);
 });
 
-module.exports = app;
+module.exports = appReflection;
