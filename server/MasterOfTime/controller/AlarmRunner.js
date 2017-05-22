@@ -7,9 +7,19 @@ var BaseballRunner = require('./BaseballRunner');
 var runner = null;
 
 function AlarmRunner(cmd) {
-	this.argsParser = getArgsParser();
-	this.args = this.argsParser.parse(cmd);
-	this.alarmManager = getAlarmManager();
+	try {
+		this.argsParser = getArgsParser();
+		this.args = this.argsParser.parse(cmd);
+		this.alarmManager = getAlarmManager();
+	} catch (e) {
+		var message = null;
+		if(e.message.startsWith('\r\nExample:')) {
+			message = e.message;
+		} else {
+			message = '잘못된 명령어가 입력되었습니다.';
+		}
+		throw Error(message);
+	}
 }
 
 AlarmRunner.prototype.run = function() {

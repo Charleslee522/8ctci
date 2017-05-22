@@ -1,5 +1,15 @@
- // Author: racerKim
+ // Author: racerKim 
+var fs = require('fs');
  var argsParser = null;
+ var text = null;
+
+function getHelp(file) {
+  if(text == null) {
+	  text = fs.readFileSync(file, 'utf8');
+  }
+  return text;
+}
+
  var ArgsParser = function() {
    var ArgumentParser = require('argparse').ArgumentParser;
 
@@ -90,12 +100,8 @@
      var args = mergeQuotedStr(commands.split(' '));
      parser.debug = true;
      parser.exit = function(status, message) {
-        if (status === 0) {
-          this._printMessage(message);
-        } else {
-          this._printMessage(message, process.stderr);
-        }
-        throw Error('Wrong Argument');
+        var helpStr = getHelp('MasterOfTime/model/help.txt');
+        throw Error(helpStr);
      }
      args = parser.parseArgs(args);
 

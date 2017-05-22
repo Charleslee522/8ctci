@@ -45,7 +45,7 @@ app.post('/hook', (req, res) => {
 		try{
 			var runner = Runner.getRunner(message.text);
 		} catch (e) {
-			reply.sendMessage(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, '잘못된 명령어가 입력되었습니다.');
+			reply.sendMessage(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, eventObj.replyToken, e.message);
 			res.sendStatus(200);
 			return;
 		}
