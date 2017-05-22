@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+var request = require('request');
 
 function send(channelAccessToken, replyToken_, messages_) {
 	var headers = {
@@ -29,12 +30,6 @@ function send(channelAccessToken, replyToken_, messages_) {
 	});
 };
 
-function sendMessage(channelAccessToken, replyToken_, string_) {
-	var message = [{"type": "text", "text" : string_}];
-	this.send(channelAccessToken, replyToken_, message);
-}
-
-
 app.set('port', process.env.PORT || 8000);
 
 var https_server = app.listen(app.get('port'), function() {
@@ -59,9 +54,10 @@ app.post('/hook', (req, res) => {
 	console.log('[request message]', message);
 	console.log('[request text]', message.text);
 	if(message.type == "text") {
-		reply.sendMessage(CHANNEL_ACCESS_TOKEN, eventObj.replyToken, resultMessage.message);
-		res.sendStatus(200);
+		var message = [{"type": "text", "text" : message.text}];
+		send(CHANNEL_ACCESS_TOKEN, eventObj.replyToken, message);
 	}
+	res.sendStatus(200);
 });
 
 module.exports = app;
