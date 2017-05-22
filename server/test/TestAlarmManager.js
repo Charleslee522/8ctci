@@ -133,11 +133,4 @@ describe('Alarm Runner', function() {
         }
     });
 
-    it('Wrong cmd3', () => {
-        try{
-            var runner = Runner.getRunner('@알람 -h');
-        } catch (e) {
-            should.equal(e.message, '\r\nExample:\r\nuse \'@알람 -c -t "55 17 * * 1-5" -n "퇴근시간!" -d "곧 퇴근시간입니다!"\'\r\nuse \'@alarm -c -t "25 12 * * 1-5" -n "점심시간!" -d "곧 점심시간입니다!"\'\r\n\r\nusage: @알람 [-c] [-h] [-t <cron>] [-n <name>] [-d <description>] [-ls] [-rm <name>] [-on <name>] [-off <name>]\r\n\r\nCron\r\nhttps://www.npmjs.com/package/node-schedule\r\n\r\nHomepage\r\nhttp://8ctci.weebly.com/how-to.html\r\n\r\n');
-        }
-    });
 });
