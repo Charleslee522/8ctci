@@ -26,13 +26,13 @@ app.get('/', (req, res) => {
 	res.end('<h1><a href="http://8ctci.weebly.com">Hello, I\'m the Master of Time!</a><h1>');
 });
 
-app.get('/hook', (req, res) => {
+app.get('/webhook', (req, res) => {
 	console.log('[GET]hook!');
 	res.writeHead(200, {'Content-Type' : 'text/html'});
 	res.end('<h1><a href="http://8ctci.weebly.com">Hello, I\'m the Master of Time!</a><h1>');
 });
 
-app.post('/hook', (req, res) => {
+app.post('/webhook', (req, res) => {
 	var eventObj = req.body.events[0];
 	var source = eventObj.source;
 	var message = eventObj.message;

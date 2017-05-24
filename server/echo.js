@@ -1,9 +1,9 @@
 var express = require('express');
-var appReflection = express();
+var app = express();
 var bodyParser = require('body-parser');
 var fs = require('fs');
-appReflection.use(bodyParser.urlencoded({extended: false}));
-appReflection.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 var request = require('request');
 
 function send(channelAccessToken, replyToken_, messages_) {
@@ -30,21 +30,21 @@ function send(channelAccessToken, replyToken_, messages_) {
 	});
 };
 
-appReflection.set('port', process.env.PORT || 8000);
+app.set('port', process.env.PORT || 8000);
 
-var https_server = appReflection.listen(appReflection.get('port'), function() {
+var https_server = app.listen(app.get('port'), function() {
 	console.log('Express https server listening on port ' + https_server.address().port);
 });
 
-appReflection.get('/', (req, res) => {
+app.get('/', (req, res) => {
 	console.log('[GET]/');
 	res.writeHead(200, {'Content-Type' : 'text/html'});
 	res.end('<h1><a href="http://8ctci.weebly.com">Hello, I\'m the Master of Time!</a><h1>');
 });
 
-const CHANNEL_ACCESS_TOKEN="";
+const CHANNEL_ACCESS_TOKEN="usq0Hmgsj9WKsylWof0LljzxyMgc+m3Iik58g+Fix804lEaLQrJzdN9JSFBq2n4d+7tPBEJKiRWg/taM23fyYMrcnbWllEl8W9eiw0I5bsn4P94cA9l4IVebW015f/YYExSGpeEbrY1i756i++HlygdB04t89/1O/w1cDnyilFU=";
 
-appReflection.post('/hook', (req, res) => {
+app.post('/hook', (req, res) => {
 	var eventObj = req.body.events[0];
 	var source = eventObj.source;
 	var message = eventObj.message;
@@ -60,4 +60,4 @@ appReflection.post('/hook', (req, res) => {
 	res.sendStatus(200);
 });
 
-module.exports = appReflection;
+module.exports = app;
