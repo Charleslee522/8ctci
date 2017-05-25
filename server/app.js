@@ -5,7 +5,7 @@ var fs = require('fs');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var AlarmManager = require('./MasterOfTime/controller/AlarmManager');
-const Runner = require('./MasterOfTime/controller/AlarmRunner');
+const Runner = require('./MasterOfTime/controller/Runner');
 
 var alarmManager = new AlarmManager();
 

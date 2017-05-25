@@ -1,7 +1,7 @@
 var chai = require('chai');
 var getAlarmManager = require('../MasterOfTime/controller/AlarmManager');
 var ResultMessage = require('../MasterOfTime/controller/ResultMessage');
-var Runner = require('../MasterOfTime/controller/AlarmRunner');
+var Runner = require('../MasterOfTime/controller/Runner');
 var ArgsParser = require('../MasterOfTime/controller/ArgsParser');
 
 var should = chai.should();

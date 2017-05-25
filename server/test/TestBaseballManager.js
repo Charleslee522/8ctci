@@ -1,6 +1,6 @@
 var chai = require('chai');
 var ResultMessage = require('../MasterOfTime/controller/ResultMessage');
-var Runner = require('../MasterOfTime/controller/AlarmRunner');
+var Runner = require('../MasterOfTime/controller/Runner');
 
 var should = chai.should();
 
