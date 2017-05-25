@@ -1,5 +1,3 @@
-var Util = require('./Util');
-
 function Ladder(){
 
 }

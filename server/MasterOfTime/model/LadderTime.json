@@ -1,0 +1,16 @@
+{
+    "ladder1":
+    {
+        "dayofweek": "2-3",
+        "hour": "14-16",
+        "minute":"50-59",
+        "resetcycle" : "weekly"
+    },
+    "ladder2":
+    {
+        "dayofweek": "4-5",
+        "hour": "14-16",
+        "minute":"50-59",
+        "resetcycle" : "weekly"
+    }
+}

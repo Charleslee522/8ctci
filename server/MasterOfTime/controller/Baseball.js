@@ -1,4 +1,4 @@
-var Util = require('./Util');
+var Util = require('./RandomUtil');
 var randomInt = function(low, high) {
     return Math.floor(Math.random() * (high - low)) + low;
 }
