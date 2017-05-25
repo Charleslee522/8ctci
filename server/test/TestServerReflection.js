@@ -1,11 +1,11 @@
 const request = require('supertest');
 const express = require('express');
-const appReflection = require('../appReflection');
+const echo = require('../echo');
 
-describe('Reflection', function() {
-  it('Reflection Test', function(done) {
-    request(appReflection)
-      .post('/hook')
+describe('Echo', function() {
+  it('Echo Test', function(done) {
+    request(echo)
+      .post('/webhook')
       .send(
         {
             "events": [

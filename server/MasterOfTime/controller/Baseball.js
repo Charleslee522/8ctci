@@ -1,7 +1,8 @@
-function randomInt (low, high) {
+var Util = require('./Util');
+var randomInt = function(low, high) {
     return Math.floor(Math.random() * (high - low)) + low;
 }
-function randomDigit() {
+var randomDigit = function() {
     return randomInt(0, 10);
 }
 
@@ -9,15 +10,15 @@ function Baseball(){
         this.arr = [];
 
     Baseball.prototype.setRandom = function(){
-        this.arr.push(randomDigit())
-        this.arr.push(randomDigit());
-        this.arr.push(randomDigit());
+        this.arr.push(Util.randomDigit())
+        this.arr.push(Util.randomDigit());
+        this.arr.push(Util.randomDigit());
         while(this.arr[0] == this.arr[1]) {
-            this.arr[1] = randomDigit();
+            this.arr[1] = Util.randomDigit();
         }
 
         while(this.arr[2] == this.arr[0] || this.arr[2] == this.arr[1]) {
-            this.arr[2] = randomDigit();
+            this.arr[2] = Util.randomDigit();
         }
         return true;
     }

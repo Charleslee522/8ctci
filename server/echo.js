@@ -30,7 +30,7 @@ function send(channelAccessToken, replyToken_, messages_) {
 	});
 };
 
-app.set('port', process.env.PORT || 8000);
+app.set('port', process.env.PORT || 3000);
 
 var https_server = app.listen(app.get('port'), function() {
 	console.log('Express https server listening on port ' + https_server.address().port);
@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 
 const CHANNEL_ACCESS_TOKEN="usq0Hmgsj9WKsylWof0LljzxyMgc+m3Iik58g+Fix804lEaLQrJzdN9JSFBq2n4d+7tPBEJKiRWg/taM23fyYMrcnbWllEl8W9eiw0I5bsn4P94cA9l4IVebW015f/YYExSGpeEbrY1i756i++HlygdB04t89/1O/w1cDnyilFU=";
 
-app.post('/hook', (req, res) => {
+app.post('/webhook', (req, res) => {
 	var eventObj = req.body.events[0];
 	var source = eventObj.source;
 	var message = eventObj.message;

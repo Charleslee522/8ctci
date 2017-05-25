@@ -2,10 +2,10 @@ const request = require('supertest');
 const express = require('express');
 const app = require('../app');
 
-describe('Server POST /hook', function() {
+describe('Server POST /webhook', function() {
   it('alarm create', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -31,7 +31,7 @@ describe('Server POST /hook', function() {
 
   it('alarm wrong', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -57,7 +57,7 @@ describe('Server POST /hook', function() {
   
   it('alarm wrong2', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -83,7 +83,7 @@ describe('Server POST /hook', function() {
 
   it('alarm list', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -108,7 +108,7 @@ describe('Server POST /hook', function() {
   });
     it('alarm help', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -137,7 +137,7 @@ describe('Server POST /hook', function() {
 describe('Baseball Server Test', function() {
   it('야구 시작', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -163,7 +163,7 @@ describe('Baseball Server Test', function() {
 
   it('야구 플레이', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
@@ -189,7 +189,7 @@ describe('Baseball Server Test', function() {
   
   it('야구 에러', function(done) {
     request(app)
-      .post('/hook')
+      .post('/webhook')
       .send(
         {
             "events": [
