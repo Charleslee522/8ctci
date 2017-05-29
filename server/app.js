@@ -112,8 +112,7 @@ app.post('/alarm', function(req, res){
 	console.log('[Alarm Request] desc: ', desc);
 	console.log('[Alarm Request] id: ', id);
 	console.log('[Alarm Request] alarmName: ', name);
-	var displayText = name + ' 알람: ' + desc;
-	var message = [{"type": "text", "text" : displayText}];
+	var message = [{"type": "text", "text" : desc}];
 	push.send(LINE_CONSTS.CHANNEL_ACCESS_TOKEN, id, message);
 	res.sendStatus(200);
 });
