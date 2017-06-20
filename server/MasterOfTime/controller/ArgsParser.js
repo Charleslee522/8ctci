@@ -61,6 +61,18 @@ function getHelp(file) {
      }
    );
    parser.addArgument(
+     ['-m', '-mute'], {
+       help: 'mute all alarms',
+       nargs: 0
+     }
+   );
+   parser.addArgument(
+     ['-w', '-wake'], {
+       help: 'wake all alarms',
+       nargs: 0
+     }
+   )
+   parser.addArgument(
      ['-rm', '-remove'], {
        help: 'remove alram',
        nargs: 1
@@ -108,7 +120,8 @@ function getHelp(file) {
      var ParsedCommands = require('../model/ParsedCommands');
      var result = new ParsedCommands();
 
-     var argName = ['c', 'mk', 'n', 'name','d', 'description', 't', 'time','on', 'off', 'rm', 'remove', 'ls', 'list'];
+     var argName = ['c', 'mk', 'n', 'name','d', 'description', 't', 'time','on', 'off', 'm', 'mute',
+     'w', 'wake', 'rm', 'remove', 'ls', 'list'];
      argName.forEach(function(element) {
        var command = args.get(element);
        if (!isUndefined(command)) {
@@ -136,6 +149,14 @@ function getHelp(file) {
            case 'off':
              result.setQuery('off');
              result.setName(command[0].replace(wsReplacerRegex, ' '));
+             break;
+           case 'm':
+           case 'mute':
+             result.setQuery('mute');
+             break;
+           case 'w':
+           case 'wake':
+             result.setQuery('wake');
              break;
            case 'rm':
            case 'remove':

@@ -23,9 +23,9 @@ function AlarmManager() {
         var alarmName = alarmModel.alarmName;
         var id = alarmModel.id;
         var alarm = new Alarm("", alarmModel.time, alarmName, alarmModel.desc, "", alarmModel.id);
-        alarms[alarmName+id] = alarm;
+        alarms[alarmName + id] = alarm;
         if (alarmModel.active === true) {
-          createJob(alarmName,id);
+          createJob(alarmName, id);
         }
       });
     };
@@ -54,6 +54,10 @@ function AlarmManager() {
         resultMessage = on(name, id); break;
       case 'off':
         resultMessage = off(name, id); break;
+      case 'mute':
+        resultMessage = mute(id); break;
+      case 'wake':
+        resultMessage = wake(id); break;
       case 'list':
         resultMessage = showList(id); break;
       default:
@@ -83,8 +87,8 @@ function AlarmManager() {
     //create alarm
     var alarm = new Alarm(creator, time, alarmName, desc, room, id);
 
-    alarms[alarmName+id] = alarm;
-    createJob(alarmName,id);    
+    alarms[alarmName + id] = alarm;
+    createJob(alarmName, id);
     alarm.active = true;
 
     var dbInstance = new MongoHelper(changeJson(alarm));
@@ -105,17 +109,17 @@ function AlarmManager() {
       resultMessage.result = false;
       return resultMaessage;
     }
-    if (alarms[alarmName+id].active) {
+    if (alarms[alarmName + id].active) {
       resultMessage.message = "이미 켜져있는 알람입니다.";
       resultMessage.result = false;
       return resultMessage;
     }
 
-    createJob(alarmName,id);
+    createJob(alarmName, id);
 
-    alarms[alarmName+id].active = true;
+    alarms[alarmName + id].active = true;
 
-    var dbInstance = new MongoHelper({"alarmName":alarmName,"id":id},changeJson(alarms[alarmName+id]));
+    var dbInstance = new MongoHelper({ "alarmName": alarmName, "id": id }, changeJson(alarms[alarmName + id]));
     dbInstance.findOneAndUpdate();
 
     resultMessage.result = true;
@@ -135,20 +139,64 @@ function AlarmManager() {
       resultMessage.result = false;
       return resultMessage;
     }
-    if (!alarms[alarmName+id].active) {
+    if (!alarms[alarmName + id].active) {
       resultMessage.message = '이미 꺼져있는 알람 입니다.';
       resultMessage.result = false;
       return resultMessage;
     }
 
-    cancelJob(alarmName,id);
+    cancelJob(alarmName, id);
 
-    alarms[alarmName+id].active = false;
+    alarms[alarmName + id].active = false;
     resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 중지 되었습니다.';
 
-    var dbInstance = new MongoHelper({"alarmName":alarmName,"id":id},changeJson(alarms[alarmName+id]));
+    var dbInstance = new MongoHelper({ "alarmName": alarmName, "id": id }, changeJson(alarms[alarmName + id]));
     dbInstance.findOneAndUpdate();
 
+    resultMessage.result = true;
+    return resultMessage;
+  };
+  /**
+   * 모든 알람을 중지 시킵니다.
+   * @param {알람 이름} alarmName 
+   */
+  var mute = function (id) {
+    var resultMessage = new ResultMessage();
+    for(var key in alarms) {
+      if(key.endsWith(id)) {
+        alarms[key].active = false;
+        var alarmName = alarms[key].alarmName;
+
+        cancelJob(alarmName, id);
+
+        var dbInstance = new MongoHelper({ "alarmName": alarmName, "id": id }, changeJson(alarms[alarmName + id]));
+        dbInstance.findOneAndUpdate();
+      }
+    }
+    
+    resultMessage.message = '모든 알람이 중지 되었습니다.';
+    resultMessage.result = true;
+    return resultMessage;
+  };
+
+  /**
+   * 모든 알람을 시작 시킵니다.
+   * @param {알람 이름} alarmName 
+   */
+  var wake = function (id) {
+    var resultMessage = new ResultMessage();
+    for(var key in alarms) {
+      if(key.endsWith(id)) {
+        alarms[key].active = true;
+        var alarmName = alarms[key].alarmName;
+
+        createJob(alarmName, id);
+
+        var dbInstance = new MongoHelper({ "alarmName": alarmName, "id": id }, changeJson(alarms[alarmName + id]));
+        dbInstance.findOneAndUpdate();
+      }
+    }    
+    resultMessage.message = '모든 알람이 시작 되었습니다.';
     resultMessage.result = true;
     return resultMessage;
   };
@@ -160,18 +208,18 @@ function AlarmManager() {
   var remove = function (alarmName, id) {
     var resultMessage = new ResultMessage();
 
-    if (!hasAlarm(alarmName,id)) {
+    if (!hasAlarm(alarmName, id)) {
       resultMessage.result = false;
       resultMessage.message = '\"' + alarmName + '\" 으로 등록된 알람이 없습니다.';
       return resultMessage;
     }
 
-    var dbInstance = new MongoHelper(changeJson(alarms[alarmName+id]));
+    var dbInstance = new MongoHelper(changeJson(alarms[alarmName + id]));
     dbInstance.remove();
 
-    cancelJob(alarmName,id);
-    delete alarms[alarmName+id];
-    
+    cancelJob(alarmName, id);
+    delete alarms[alarmName + id];
+
     resultMessage.result = true;
     resultMessage.message = '\"' + alarmName + '\" 알람을 제거하였습니다.';
 
@@ -217,7 +265,7 @@ function AlarmManager() {
    * @param {알람 이름} alarmName 
    */
   var hasAlarm = function (alarmName, id) {
-    if (alarms[alarmName+id] === undefined) {
+    if (alarms[alarmName + id] === undefined) {
       return false;
     }
     return true;
@@ -242,13 +290,13 @@ function AlarmManager() {
    * @param {알람 이름} alarmName 
    */
   var createJob = function (alarmName, id) {
-    alarms[alarmName+id].job = schedule.scheduleJob(alarms[alarmName+id].time, function () {
+    alarms[alarmName + id].job = schedule.scheduleJob(alarms[alarmName + id].time, function () {
       request.post({
         url: 'http://localhost:8000/alarm',
         body: {
-          desc: alarms[alarmName+id].desc,
+          desc: alarms[alarmName + id].desc,
           alarmName: alarmName,
-          id: alarms[alarmName+id].id
+          id: alarms[alarmName + id].id
         },
         json: true
       },
@@ -266,11 +314,11 @@ function AlarmManager() {
    * @param {알람 이름} alarmName 
    */
   var cancelJob = function (alarmName, id) {
-    if (alarms[alarmName+id].job === undefined) {
+    if (alarms[alarmName + id].job === undefined) {
       logger.info('job 을 찾을 수 없습니다. (\"' + alarmName + '\")');
       return;
     }
-    alarms[alarmName+id].job.cancel();
+    alarms[alarmName + id].job.cancel();
   };
 
   /**

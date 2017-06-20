@@ -34,6 +34,22 @@ describe('AlarmManager', function () {
         resultMessage.message.should.equal('알람 생성 완료!!');
     });
 
+    it('alarm mute', function(){
+        var runner = Runner.getRunner('@alarm -mute');
+        runner.setId(1);
+        resultMessage = runner.run();
+        resultMessage.result.should.equal(true);
+        resultMessage.message.should.equal('모든 알람이 중지 되었습니다.');
+    });
+
+    it('alarm wake', function(){
+        var runner = Runner.getRunner('@alarm -wake');
+        runner.setId(1);
+        resultMessage = runner.run();
+        resultMessage.result.should.equal(true);
+        resultMessage.message.should.equal('모든 알람이 시작 되었습니다.');
+    });
+
     it('off alarm', function(){
         var runner = Runner.getRunner('@alarm -off your_alarm');
         runner.setId(1);
